@@ -1,13 +1,16 @@
 defmodule Advent2020.Days.Day1 do
+  use Advent2020.Day, day: 1
 
-  @input Path.join(Path.dirname(__ENV__.file), "input.txt") |> File.read!()
+  @input Path.join(Path.dirname(__ENV__.file), "day_1_input.txt") |> File.read!()
 
+  @impl true
   def part_one do
     @input
     |> parse_intlist()
     |> find_expense_anomoly()
   end
 
+  @impl true
   def part_two do
     @input
     |> parse_intlist()
