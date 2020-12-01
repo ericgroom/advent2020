@@ -4,33 +4,56 @@ defmodule Advent2020.Days.Day1 do
 
   def part_one do
     @input
-    |> String.trim()
-    |> String.split("\n")
-    |> Enum.map(&String.to_integer/1)
+    |> parse_intlist()
     |> find_expense_anomoly()
   end
 
-  def find_expense_anomoly items do
-    anomoly_sum = 2020
-    items_set = MapSet.new(items)
-    pairs = Enum.map(items, fn item ->
-      counterpart = anomoly_sum - item
-      if MapSet.member?(items_set, counterpart) do
-        {:has_counterpart, {item, counterpart}}
-      else
-        {:no_counterpart, item}
-      end
-    end)
+  def part_two do
+    @input
+    |> parse_intlist()
+    |> find_other_anomoly()
+  end
 
-    {:has_counterpart, {expense_one, expense_two}} = Enum.find(pairs, fn pair ->
-      case pair do
-        {:has_counterpart, {_expense, _counterpart}} ->
-          true
-        {:no_counterpart, _expense} ->
-          false
-      end
+  defp parse_intlist raw do
+    raw
+    |> String.trim()
+    |> String.split("\n")
+    |> Enum.map(&String.to_integer/1)
+  end
+
+  @anomoly_sum 2020
+
+  def find_expense_anomoly items do
+    pairs = permutations_exluding_self(items)
+
+    {expense_one, expense_two} = Enum.find(pairs, fn {x, y} ->
+      x + y == @anomoly_sum
     end)
 
     expense_one * expense_two
+  end
+
+  def find_other_anomoly items do
+    items_set = MapSet.new(items)
+    pairs = permutations_exluding_self(items)
+
+    {expense_one, expense_two} = Enum.find(pairs, fn {x, y} ->
+      counterpart = @anomoly_sum - x - y
+      MapSet.member?(items_set, counterpart)
+    end)
+
+    expense_three = @anomoly_sum - expense_one - expense_two
+    expense_one * expense_two * expense_three
+  end
+
+  defp permutations_exluding_self items do
+    enumerated_items = Enum.with_index(items)
+    enumerated_items
+    |> Enum.flat_map(fn {item, index} ->
+      Enum.map(enumerated_items, fn {second_item, second_index} ->
+        if index == second_index, do: nil, else: {item, second_item}
+      end)
+    end)
+    |> Enum.filter(fn item -> item != nil end)
   end
 end
