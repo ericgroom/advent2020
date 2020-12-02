@@ -1,21 +1,14 @@
 # Advent2020
 
-**TODO: Add description**
+**My Solutions to Advent of Code 2020 in Elixir**
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `advent2020` to your list of dependencies in `mix.exs`:
+Instructions to install the elixir compiler can be found [here](https://elixir-lang.org/install.html)
 
-```elixir
-def deps do
-  [
-    {:advent2020, "~> 0.1.0"}
-  ]
-end
-```
+## Running
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/advent2020](https://hexdocs.pm/advent2020).
+To run all of my solutions you can run `mix run_days`.
+
+To run the test suite which tests against sample and my inputs you can run `mix test`
 
