@@ -18,9 +18,23 @@ defmodule Advent2020.Days.Day2Test do
 
   describe "valid_official_password?" do
     test "sample input" do
-      assert valid_official_password?("abcde", %PasswordPolicy{num_one: 1, num_two: 3, letter: "a"})
-      refute valid_official_password?("cdefg", %PasswordPolicy{num_one: 1, num_two: 3, letter: "b"})
-      refute valid_official_password?("ccccccccc", %PasswordPolicy{num_one: 2, num_two: 9, letter: "c"})
+      assert valid_official_password?("abcde", %PasswordPolicy{
+               num_one: 1,
+               num_two: 3,
+               letter: "a"
+             })
+
+      refute valid_official_password?("cdefg", %PasswordPolicy{
+               num_one: 1,
+               num_two: 3,
+               letter: "b"
+             })
+
+      refute valid_official_password?("ccccccccc", %PasswordPolicy{
+               num_one: 2,
+               num_two: 9,
+               letter: "c"
+             })
     end
 
     test "real input" do

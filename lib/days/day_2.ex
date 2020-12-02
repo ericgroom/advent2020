@@ -16,14 +16,21 @@ defmodule Advent2020.Days.Day2 do
   end
 
   alias __MODULE__.PasswordPolicy
+
   defmodule __MODULE__.PasswordPolicy do
     defstruct [:num_one, :num_two, :letter]
   end
 
-  def valid_official_password?(password, %PasswordPolicy{num_one: pos_one, num_two: pos_two, letter: letter}) do
-    letter_one = String.at(password, pos_one-1)
-    letter_two = String.at(password, pos_two-1)
-    (letter_one == letter and letter_two != letter) or (letter_two == letter and letter_one != letter)
+  def valid_official_password?(password, %PasswordPolicy{
+        num_one: pos_one,
+        num_two: pos_two,
+        letter: letter
+      }) do
+    letter_one = String.at(password, pos_one - 1)
+    letter_two = String.at(password, pos_two - 1)
+
+    (letter_one == letter and letter_two != letter) or
+      (letter_two == letter and letter_one != letter)
   end
 
   def valid_password?(password, %PasswordPolicy{num_one: min, num_two: max, letter: letter}) do
@@ -40,21 +47,21 @@ defmodule Advent2020.Days.Day2 do
     end)
   end
 
-  defp parse_passwords raw do
+  defp parse_passwords(raw) do
     raw
     |> String.trim()
     |> String.split("\n")
     |> Enum.map(&parse_password/1)
   end
 
-  defp parse_password password do
+  defp parse_password(password) do
     trimmed = String.trim(password)
     [policy, password] = String.split(trimmed, ":") |> Enum.map(&String.trim/1)
     policy = parse_policy(policy)
     {password, policy}
   end
 
-  defp parse_policy policy do
+  defp parse_policy(policy) do
     [range, letter] = String.split(policy, " ")
     [min, max] = String.split(range, "-") |> Enum.map(&String.to_integer/1)
     %PasswordPolicy{num_one: min, num_two: max, letter: letter}
