@@ -6,21 +6,14 @@ defmodule Advent2020.Days.Day1 do
 
   def part_one do
     @input
-    |> parse_intlist()
+    |> Parser.parse_intlist()
     |> find_expense_anomoly()
   end
 
   def part_two do
     @input
-    |> parse_intlist()
+    |> Parser.parse_intlist()
     |> find_other_anomoly()
-  end
-
-  defp parse_intlist raw do
-    raw
-    |> String.trim()
-    |> String.split("\n")
-    |> Enum.map(&String.to_integer/1)
   end
 
   @anomoly_sum 2020
