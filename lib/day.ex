@@ -2,7 +2,7 @@ defmodule Advent2020.Day do
   @callback part_one() :: any()
   @callback part_two() :: any()
 
-  defmacro __using__([day: day, input: input_file]) do
+  defmacro __using__(day: day, input: input_file) do
     quote do
       @behaviour unquote(__MODULE__)
 

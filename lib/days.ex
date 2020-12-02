@@ -9,6 +9,7 @@ defmodule Advent2020.Days do
 
   defp day_implementation?(module) do
     behaviors = module.module_info(:attributes)[:behaviour]
+
     case behaviors do
       nil -> false
       list -> Enum.member?(list, Advent2020.Day)
