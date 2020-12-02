@@ -1,8 +1,6 @@
 defmodule Advent2020.Days.Day1 do
 
-  use Advent2020.Day, day: 1
-
-  @input Path.join(Path.dirname(__ENV__.file), "day_1_input.txt") |> File.read!()
+  use Advent2020.Day, day: 1, input: "day_1_input.txt"
 
   def part_one do
     @input
