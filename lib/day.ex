@@ -9,7 +9,9 @@ defmodule Advent2020.Day do
       Module.register_attribute(__MODULE__, :day, persist: true)
       Module.put_attribute(__MODULE__, :day, unquote(day))
 
-      @input Path.join(Path.dirname(__ENV__.file), unquote(input_file)) |> File.read!()
+      path = Path.join(Path.dirname(__ENV__.file), unquote(input_file))
+      @external_resource path
+      @input path |> File.read!()
 
       alias Advent2020.Parser
     end
