@@ -17,19 +17,12 @@ defmodule Advent2020.Days.Day3 do
 
   def parse(raw) do
     raw
-    |> String.split("\n")
-    |> Enum.map(&String.trim/1)
-    |> Enum.map(&String.graphemes/1)
-    |> Enum.map(fn row ->
-      Enum.map(row, fn space ->
-        case space do
-          "#" -> :tree
-          "." -> :empty
-        end
-      end)
-    end)
+    |> Parser.parse_grid(&parse_space/1)
     |> CycledGrid.new()
   end
+
+  defp parse_space("#"), do: :tree
+  defp parse_space("."), do: :empty
 
   def count_all_slopes(%CycledGrid{} = grid) do
     slopes = [
