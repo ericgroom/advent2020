@@ -1,6 +1,6 @@
 defmodule Advent2020.DataStructures.CycledGrid do
   alias __MODULE__
-  alias Advent2020.DataStructures.Coord2D
+  alias Advent2020.DataStructures.Vec2D
 
   defstruct [:data, :row_length]
 
@@ -10,13 +10,13 @@ defmodule Advent2020.DataStructures.CycledGrid do
     %CycledGrid{data: data, row_length: row_length}
   end
 
-  def at(%CycledGrid{} = grid, %Coord2D{} = coord) do
+  def at(%CycledGrid{} = grid, %Vec2D{} = coord) do
     translated = translate_coord(grid, coord)
     i = to_index(grid, translated)
     Enum.at(grid.data, i)
   end
 
-  def exists?(%CycledGrid{data: data} = grid, %Coord2D{} = coord) do
+  def exists?(%CycledGrid{data: data} = grid, %Vec2D{} = coord) do
     translated = translate_coord(grid, coord)
     i = to_index(grid, translated)
 
@@ -29,7 +29,7 @@ defmodule Advent2020.DataStructures.CycledGrid do
     defstruct [:x, :y]
   end
 
-  defp translate_coord(%CycledGrid{row_length: row_length}, %Coord2D{x: x, y: y}) do
+  defp translate_coord(%CycledGrid{row_length: row_length}, %Vec2D{x: x, y: y}) do
     x = rem(x, row_length)
     %UncycledCoord{x: x, y: y}
   end
