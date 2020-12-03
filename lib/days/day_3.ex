@@ -44,16 +44,10 @@ defmodule Advent2020.Days.Day3 do
   end
 
   defp count_trees(%CycledGrid{} = grid, %Vec2D{} = slope, %Vec2D{} = coord) do
-    if !CycledGrid.exists?(grid, coord) do
-      0
-    else
-      count =
-        case CycledGrid.at(grid, coord) do
-          :tree -> 1
-          :empty -> 0
-        end
-
-      count + count_trees(grid, slope, Vec2D.add(slope, coord))
+    case CycledGrid.at(grid, coord) do
+      :invalid_coord -> 0
+      :tree -> 1 + count_trees(grid, slope, Vec2D.add(slope, coord))
+      :empty -> 0 + count_trees(grid, slope, Vec2D.add(slope, coord))
     end
   end
 end

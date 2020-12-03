@@ -13,14 +13,11 @@ defmodule Advent2020.DataStructures.CycledGrid do
   def at(%CycledGrid{} = grid, %Vec2D{} = coord) do
     translated = translate_coord(grid, coord)
     i = to_index(grid, translated)
-    Enum.at(grid.data, i)
-  end
-
-  def exists?(%CycledGrid{data: data} = grid, %Vec2D{} = coord) do
-    translated = translate_coord(grid, coord)
-    i = to_index(grid, translated)
-
-    i < Enum.count(data)
+    if i >= 0 and i < Enum.count(grid.data) do
+      Enum.at(grid.data, i)
+    else
+      :invalid_coord
+    end
   end
 
   alias __MODULE__.UncycledCoord
