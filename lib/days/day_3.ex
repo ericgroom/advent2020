@@ -1,0 +1,45 @@
+defmodule Advent2020.Days.Day3 do
+  use Advent2020.Day, day: 3, input: "day_3_input.txt"
+
+  alias Advent2020.DataStructures.{CycledGrid, Coord2D}
+
+  def part_one do
+    @input
+    |> parse()
+    |> count_trees({3, 1})
+  end
+
+  def parse(raw) do
+    raw
+    |> String.split("\n")
+    |> Enum.map(&String.trim/1)
+    |> Enum.map(&String.graphemes/1)
+    |> Enum.map(fn row ->
+      Enum.map(row, fn space ->
+        case space do
+          "#" -> :tree
+          "." -> :empty
+        end
+      end)
+    end)
+    |> CycledGrid.new()
+  end
+
+  def count_trees(%CycledGrid{} = grid, {_x_inc, _y_inc} = slope) do
+    count_trees(grid, slope, %Coord2D{x: 0, y: 0})
+  end
+
+  defp count_trees(%CycledGrid{} = grid, {x_inc, y_inc}, %Coord2D{} = coord) do
+    if !CycledGrid.exists?(grid, coord) do
+      0
+    else
+      count =
+        case CycledGrid.at(grid, coord) do
+          :tree -> 1
+          :empty -> 0
+        end
+
+      count + count_trees(grid, {x_inc, y_inc}, %Coord2D{x: coord.x + x_inc, y: coord.y + y_inc})
+    end
+  end
+end
