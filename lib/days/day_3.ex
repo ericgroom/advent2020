@@ -9,6 +9,12 @@ defmodule Advent2020.Days.Day3 do
     |> count_trees({3, 1})
   end
 
+  def part_two do
+    @input
+    |> parse()
+    |> count_all_slopes()
+  end
+
   def parse(raw) do
     raw
     |> String.split("\n")
@@ -23,6 +29,20 @@ defmodule Advent2020.Days.Day3 do
       end)
     end)
     |> CycledGrid.new()
+  end
+
+  def count_all_slopes(%CycledGrid{} = grid) do
+    slopes = [
+      {1, 1},
+      {3, 1},
+      {5, 1},
+      {7, 1},
+      {1, 2}
+    ]
+
+    slopes
+    |> Enum.map(&count_trees(grid, &1))
+    |> Enum.reduce(1, fn x, acc -> acc * x end)
   end
 
   def count_trees(%CycledGrid{} = grid, {_x_inc, _y_inc} = slope) do

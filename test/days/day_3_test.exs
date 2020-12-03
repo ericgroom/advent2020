@@ -38,4 +38,15 @@ defmodule Advent2020.Days.Day3Test do
       assert part_one() == 282
     end
   end
+
+  describe "count_all_slopes/1" do
+    test "sample input" do
+      grid = parse(@sample_input)
+      assert count_all_slopes(grid) == 336
+    end
+
+    test "real input" do
+      assert part_two() == 958_815_792
+    end
+  end
 end
