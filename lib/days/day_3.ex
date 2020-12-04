@@ -1,5 +1,5 @@
 defmodule Advent2020.Days.Day3 do
-  use Advent2020.Day, day: 3, input: "day_3_input.txt"
+  use Advent2020.Day, day: 3
 
   alias Advent2020.DataStructures.{CycledGrid, Vec2D}
 

@@ -1,5 +1,5 @@
 defmodule Advent2020.Days.Day1 do
-  use Advent2020.Day, day: 1, input: "day_1_input.txt"
+  use Advent2020.Day, day: 1
 
   def part_one do
     @input

@@ -2,14 +2,14 @@ defmodule Advent2020.Day do
   @callback part_one() :: any()
   @callback part_two() :: any()
 
-  defmacro __using__(day: day, input: input_file) do
+  defmacro __using__(day: day) do
     quote do
       @behaviour unquote(__MODULE__)
 
       Module.register_attribute(__MODULE__, :day, persist: true)
       Module.put_attribute(__MODULE__, :day, unquote(day))
 
-      path = Path.join(Path.dirname(__ENV__.file), unquote(input_file))
+      path = Path.join(Path.dirname(__ENV__.file), "day_#{unquote(day)}_input.txt")
       @external_resource path
       @input path |> File.read!()
 

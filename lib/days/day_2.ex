@@ -1,5 +1,5 @@
 defmodule Advent2020.Days.Day2 do
-  use Advent2020.Day, day: 2, input: "day_2_input.txt"
+  use Advent2020.Day, day: 2
 
   def part_one do
     count_valid_passwords(&valid_password?/2)
