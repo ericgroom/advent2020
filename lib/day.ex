@@ -11,7 +11,7 @@ defmodule Advent2020.Day do
 
       path = Path.join(Path.dirname(__ENV__.file), "day_#{unquote(day)}_input.txt")
       @external_resource path
-      @input path |> File.read!()
+      @input if File.exists?(path), do: File.read!(path)
 
       alias Advent2020.Parser
     end
