@@ -4,33 +4,33 @@ defmodule Advent2020.Days.Day4 do
   def part_one do
     @input
     |> parse()
-    |> Enum.map(&valid_north_pole_credentials?/1)
-    |> Enum.filter(& &1)
+    |> Stream.map(&valid_north_pole_credentials?/1)
+    |> Stream.filter(& &1)
     |> Enum.count()
   end
 
   def part_two do
     @input
     |> parse()
-    |> Enum.map(fn passport ->
+    |> Stream.map(fn passport ->
       valid_north_pole_credentials?(passport) && valid_values?(passport)
     end)
-    |> Enum.filter(& &1)
+    |> Stream.filter(& &1)
     |> Enum.count()
   end
 
   defp parse(raw) do
     raw
     |> String.split("\n\n")
-    |> Enum.map(fn passport -> String.replace(passport, "\n", " ") end)
-    |> Enum.map(&parse_passport/1)
+    |> Stream.map(fn passport -> String.replace(passport, "\n", " ") end)
+    |> Stream.map(&parse_passport/1)
   end
 
   defp parse_passport(passport) do
     passport
     |> String.split(" ")
-    |> Enum.filter(&("" != &1))
-    |> Enum.map(fn field ->
+    |> Stream.filter(&("" != &1))
+    |> Stream.map(fn field ->
       [key, value] = field |> String.trim() |> String.split(":")
       {key, value}
     end)
