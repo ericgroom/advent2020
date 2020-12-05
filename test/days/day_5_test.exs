@@ -24,4 +24,10 @@ defmodule Advent2020.Days.Day5Test do
       assert seat_id({102, 4}) == 820
     end
   end
+
+  describe "find_my_seat/2" do
+    test "real input" do
+      assert part_two() == 565
+    end
+  end
 end
