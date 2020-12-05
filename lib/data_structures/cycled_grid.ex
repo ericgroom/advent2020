@@ -13,6 +13,7 @@ defmodule Advent2020.DataStructures.CycledGrid do
   def at(%CycledGrid{} = grid, %Vec2D{} = coord) do
     translated = translate_coord(grid, coord)
     i = to_index(grid, translated)
+
     if i >= 0 and i < Enum.count(grid.data) do
       Enum.at(grid.data, i)
     else
