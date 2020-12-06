@@ -35,12 +35,12 @@ defmodule Advent2020.Days.Day6Test do
     end
   end
 
-  describe "declaration_for_group" do
+  describe "declaration_for_group anyone" do
     test "sample input" do
       declarations =
         @sample_input
         |> parse()
-        |> Enum.map(&declaration_for_group/1)
+        |> Enum.map(fn group -> declaration_for_group(group, &anyone_combinator/1) end)
         |> Enum.map(&MapSet.to_list/1)
 
       assert declarations == [
@@ -54,6 +54,28 @@ defmodule Advent2020.Days.Day6Test do
 
     test "real input" do
       assert part_one() == 6630
+    end
+  end
+
+  describe "declaration_for_group everyone" do
+    test "sample input" do
+      declarations =
+        @sample_input
+        |> parse()
+        |> Enum.map(fn group -> declaration_for_group(group, &everyone_combinator/1) end)
+        |> Enum.map(&MapSet.to_list/1)
+
+      assert declarations == [
+               ["a", "b", "c"],
+               [],
+               ["a"],
+               ["a"],
+               ["b"]
+             ]
+    end
+
+    test "real input" do
+      assert part_two() == 3437
     end
   end
 end

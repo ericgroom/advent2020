@@ -4,7 +4,15 @@ defmodule Advent2020.Days.Day6 do
   def part_one do
     @input
     |> parse()
-    |> Enum.map(&declaration_for_group/1)
+    |> Enum.map(fn group -> declaration_for_group(group, &anyone_combinator/1) end)
+    |> Enum.map(&MapSet.size/1)
+    |> Enum.sum()
+  end
+
+  def part_two do
+    @input
+    |> parse()
+    |> Enum.map(fn group -> declaration_for_group(group, &everyone_combinator/1) end)
     |> Enum.map(&MapSet.size/1)
     |> Enum.sum()
   end
@@ -21,9 +29,19 @@ defmodule Advent2020.Days.Day6 do
     end)
   end
 
-  def declaration_for_group(group) do
+  def declaration_for_group(group, combinator) do
     group
-    |> List.flatten()
-    |> Enum.into(MapSet.new())
+    |> Enum.map(&MapSet.new/1)
+    |> combinator.()
+  end
+
+  def anyone_combinator(people) do
+    people
+    |> Enum.reduce(&MapSet.union/2)
+  end
+
+  def everyone_combinator(people) do
+    people
+    |> Enum.reduce(&MapSet.intersection/2)
   end
 end
