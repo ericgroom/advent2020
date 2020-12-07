@@ -1,5 +1,6 @@
 defmodule Advent2020.Days.Day5 do
   use Advent2020.Day, day: 5
+  import Inline
 
   alias Advent2020.Math.Range, as: R
 
@@ -56,18 +57,22 @@ defmodule Advent2020.Days.Day5 do
     end
   end
 
+  test reduce_space("F", {0..63, 0..7}), is: {0..31, 0..7}
   defp reduce_space("F", {vertical_range, horizontal_range}) do
     {R.lower_half(vertical_range), horizontal_range}
   end
 
+  test reduce_space("B", {0..63, 0..7}), is: {32..63, 0..7}
   defp reduce_space("B", {vertical_range, horizontal_range}) do
     {R.upper_half(vertical_range), horizontal_range}
   end
 
+  test reduce_space("L", {0..63, 0..7}), is: {0..63, 0..3}
   defp reduce_space("L", {vertical_range, horizontal_range}) do
     {vertical_range, R.lower_half(horizontal_range)}
   end
 
+  test reduce_space("R", {0..63, 0..7}), is: {0..63, 4..7}
   defp reduce_space("R", {vertical_range, horizontal_range}) do
     {vertical_range, R.upper_half(horizontal_range)}
   end

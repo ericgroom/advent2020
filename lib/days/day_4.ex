@@ -1,5 +1,6 @@
 defmodule Advent2020.Days.Day4 do
   use Advent2020.Day, day: 4
+  import Inline
 
   def part_one do
     @input
@@ -9,6 +10,7 @@ defmodule Advent2020.Days.Day4 do
     |> Enum.count()
   end
 
+  test part_two(), is: 158
   def part_two do
     @input
     |> parse()
