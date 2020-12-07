@@ -11,6 +11,7 @@ defmodule Advent2020.Days.Day4 do
   end
 
   test part_two(), is: 158
+
   def part_two do
     @input
     |> parse()
