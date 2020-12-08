@@ -28,6 +28,8 @@ defmodule Advent2020.Days.Day8 do
       do: memory[instruction_ptr]
 
     def next(context), do: update_in(context.instruction_ptr, &(&1 + 1))
+
+    def reset(context), do: new(context.memory |> Map.values())
   end
 
   def part_one do
@@ -38,12 +40,10 @@ defmodule Advent2020.Days.Day8 do
   end
 
   def part_two do
-    context =
-      @input
-      |> parse()
-      |> ExecutionContext.new()
-
-    run_with_corruption_correction(context, context)
+    @input
+    |> parse()
+    |> ExecutionContext.new()
+    |> run_with_corruption_correction()
   end
 
   def parse(raw) do
@@ -70,9 +70,13 @@ defmodule Advent2020.Days.Day8 do
     end
   end
 
+  def run_with_corruption_correction(context) do
+    run_with_corruption_correction(context, context, [])
+  end
+
   @spec run_with_corruption_correction(ExecutionContext.t(), ExecutionContext.t(), List.t()) ::
           integer()
-  def run_with_corruption_correction(context, og, previous_instructions \\ []) do
+  defp run_with_corruption_correction(context, og, previous_instructions) do
     if Enum.member?(previous_instructions, context.instruction_ptr) do
 
       previous_occurrence =
