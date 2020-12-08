@@ -61,14 +61,12 @@ defmodule Advent2020.Days.Day8 do
     {op, value}
   end
 
-  @spec run_until_loop_detected(ExecutionContext.t(), MapSet.t()) :: integer()
-  def run_until_loop_detected(context, previous_instructions \\ MapSet.new()) do
-    if MapSet.member?(previous_instructions, context.instruction_ptr) do
-      context.accumulator
-    else
-      with_current = MapSet.put(previous_instructions, context.instruction_ptr)
-      new_context = run_head(context)
-      run_until_loop_detected(new_context, with_current)
+  def run_until_loop_detected(context) do
+    case run_until_completion(context) do
+      {:cycle, acc} ->
+        acc
+      {:completed, _acc} ->
+        raise "not expected to finish"
     end
   end
 
@@ -88,7 +86,7 @@ defmodule Advent2020.Days.Day8 do
           new_context = repair_corruption(og, ptr)
 
           case run_until_completion(new_context) do
-            :cycle ->
+            {:cycle, _} ->
               nil
 
             {:completed, acc} ->
@@ -125,11 +123,12 @@ defmodule Advent2020.Days.Day8 do
     end
   end
 
+  @spec run_until_completion(ExecutionContext.t(), MapSet.new()) :: {:cycle, integer()} | {:completed, integer()}
   defp run_until_completion(context, previous_instructions \\ MapSet.new()) do
     current_ptr = context.instruction_ptr
 
     if MapSet.member?(previous_instructions, current_ptr) do
-      :cycle
+      {:cycle, context.accumulator}
     else
       with_current = MapSet.put(previous_instructions, current_ptr)
 
