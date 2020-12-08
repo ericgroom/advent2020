@@ -81,7 +81,7 @@ defmodule Advent2020.Days.Day8 do
         Enum.find_index(previous_instructions, fn ptr -> ptr == context.instruction_ptr end)
 
       cycle = Enum.slice(previous_instructions, 0..previous_occurrence)
-      culprits = corruptions_culprits(context, cycle)
+      culprits = Enum.filter(cycle, fn ptr -> corruptable?(context.memory[ptr]) end)
 
       try do
         for ptr <- culprits do
@@ -105,21 +105,9 @@ defmodule Advent2020.Days.Day8 do
     end
   end
 
-  defp corruptions_culprits(context, cycle) do
-    cycle
-    |> Enum.filter(fn ptr ->
-      case context.memory[ptr] do
-        {:nop, _value} ->
-          true
-
-        {:jmp, _value} ->
-          true
-
-        _ ->
-          false
-      end
-    end)
-  end
+  defp corruptable?({:nop, _value}), do: true
+  defp corruptable?({:jmp, _value}), do: true
+  defp corruptable?(_instr), do: false
 
   defp repair_corruption(context, corrupted_at) do
     case context.memory[corrupted_at] do
