@@ -81,21 +81,16 @@ defmodule Advent2020.Days.Day8 do
       cycle = Enum.slice(previous_instructions, 0..previous_occurrence)
       culprits = Enum.filter(cycle, fn ptr -> corruptable?(context.memory[ptr]) end)
 
-      try do
-        for ptr <- culprits do
-          new_context = repair_corruption(og, ptr)
+      Enum.find_value(culprits, fn ptr ->
+        new_context = repair_corruption(og, ptr)
 
-          case run_until_completion(new_context) do
-            {:cycle, _} ->
-              nil
-
-            {:completed, acc} ->
-              throw(acc)
-          end
+        case run_until_completion(new_context) do
+          {:cycle, _} ->
+            nil
+          {:completed, acc} ->
+            acc
         end
-      catch
-        x -> x
-      end
+      end)
     else
       with_current = [context.instruction_ptr | previous_instructions]
       new_context = run_head(context)
