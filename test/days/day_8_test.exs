@@ -62,4 +62,16 @@ defmodule Advent2020.Days.Day8Test do
       assert part_one() == 1859
     end
   end
+
+  describe "run_with_corruption_correction/1" do
+    test "sample input" do
+      instructions = parse(@sample)
+      context = ExecutionContext.new(instructions)
+      assert run_with_corruption_correction(context, context) == 8
+    end
+
+    test "real input" do
+      assert part_two() == 1235
+    end
+  end
 end

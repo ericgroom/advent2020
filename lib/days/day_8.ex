@@ -23,7 +23,7 @@ defmodule Advent2020.Days.Day8 do
       %__MODULE__{memory: memory, instruction_ptr: 0, accumulator: 0}
     end
 
-    @spec get_head(t()) :: instruction()
+    @spec get_head(t()) :: instruction() | nil
     def get_head(%__MODULE__{memory: memory, instruction_ptr: instruction_ptr}),
       do: memory[instruction_ptr]
 
@@ -35,6 +35,15 @@ defmodule Advent2020.Days.Day8 do
     |> parse()
     |> ExecutionContext.new()
     |> run_until_loop_detected()
+  end
+
+  def part_two do
+    context =
+      @input
+      |> parse()
+      |> ExecutionContext.new()
+
+    run_with_corruption_correction(context, context)
   end
 
   def parse(raw) do
@@ -63,8 +72,100 @@ defmodule Advent2020.Days.Day8 do
     end
   end
 
+  require Logger
+
+  @spec run_with_corruption_correction(ExecutionContext.t(), ExecutionContext.t(), List.t()) ::
+          integer()
+  def run_with_corruption_correction(context, og, previous_instructions \\ []) do
+    if Enum.member?(previous_instructions, context.instruction_ptr) do
+      Logger.debug("Loop detected at #{context.instruction_ptr}")
+
+      previous_occurrence =
+        Enum.find_index(previous_instructions, fn ptr -> ptr == context.instruction_ptr end)
+
+      cycle = Enum.slice(previous_instructions, 0..previous_occurrence)
+      Logger.debug("cycle is #{Enum.count(cycle)}: #{inspect(cycle)}")
+      culprits = corruptions_culprits(context, cycle)
+
+      try do
+        for ptr <- culprits do
+          Logger.debug("attempting repair at #{ptr}")
+          new_context = repair_corruption(og, ptr)
+
+          case run_until_completion(new_context) do
+            :cycle ->
+              Logger.debug("#{ptr} didn't fix the cycle")
+              nil
+
+            {:completed, acc} ->
+              throw(acc)
+          end
+        end
+      catch
+        x -> x
+      end
+    else
+      with_current = [context.instruction_ptr | previous_instructions]
+      new_context = run_head(context)
+      run_with_corruption_correction(new_context, og, with_current)
+    end
+  end
+
+  defp corruptions_culprits(context, cycle) do
+    cycle
+    |> Enum.filter(fn ptr ->
+      case context.memory[ptr] do
+        {:nop, _value} ->
+          true
+
+        {:jmp, _value} ->
+          true
+
+        _ ->
+          false
+      end
+    end)
+  end
+
+  defp repair_corruption(context, corrupted_at) do
+    Logger.debug("detected memory corruption at #{corrupted_at}, repairing...")
+
+    case context.memory[corrupted_at] do
+      {:jmp, value} ->
+        put_in(context.memory[corrupted_at], {:nop, value})
+
+      {:nop, value} ->
+        put_in(context.memory[corrupted_at], {:jmp, value})
+
+      {:acc, _} ->
+        raise "instructions state this is not the corrupted instruction"
+
+      nil ->
+        raise "cannot uncorrupt memory which does not exist"
+    end
+  end
+
+  defp run_until_completion(context, previous_instructions \\ MapSet.new()) do
+    current_ptr = context.instruction_ptr
+
+    if MapSet.member?(previous_instructions, current_ptr) do
+      :cycle
+    else
+      with_current = MapSet.put(previous_instructions, current_ptr)
+
+      case run_head(context) do
+        {:completed, acc} ->
+          {:completed, acc}
+
+        context ->
+          run_until_completion(context, with_current)
+      end
+    end
+  end
+
   defp run_head(context) do
     instruction = ExecutionContext.get_head(context)
+    # Logger.debug("running #{inspect instruction} at #{context.instruction_ptr}")
 
     case instruction do
       {:nop, _} ->
@@ -79,6 +180,9 @@ defmodule Advent2020.Days.Day8 do
 
       {:jmp, value} ->
         update_in(context.instruction_ptr, &(&1 + value))
+
+      nil ->
+        {:completed, context.accumulator}
     end
   end
 end
