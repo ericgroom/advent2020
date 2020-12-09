@@ -1,5 +1,4 @@
 defmodule Advent2020.VM.ExecutionContext do
-
   alias __MODULE__
 
   @type address() :: integer()
@@ -32,5 +31,6 @@ defmodule Advent2020.VM.ExecutionContext do
   def next(context), do: update_in(context.instruction_ptr, &(&1 + 1))
 
   @spec reset(t()) :: t()
-  def reset(context), do: %ExecutionContext{memory: context.memory, instruction_ptr: 0, accumulator: 0}
+  def reset(context),
+    do: %ExecutionContext{memory: context.memory, instruction_ptr: 0, accumulator: 0}
 end
