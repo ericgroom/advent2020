@@ -1,0 +1,3 @@
+%{
+  "inline": {:hex, :inline, "0.1.0", "0425609e787b8f78312f2fd51ae0b55853a0a8da24dfb77d5f9bdd16bc525d58", [:mix], [], "hexpm", "ae5517ce3667c108fa101f8dad6cefc117c6b8002cf1f0a773f81b8124959f21"},
+}

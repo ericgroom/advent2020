@@ -20,7 +20,7 @@ defmodule Advent2020.MixProject do
 
   defp deps do
     [
-      {:inline, "~> 0.1", path: "../inline"}
+      {:inline, "~> 0.1"}
     ]
   end
 end
