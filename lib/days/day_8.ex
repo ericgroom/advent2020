@@ -19,9 +19,7 @@ defmodule Advent2020.Days.Day8 do
 
   def parse(raw) do
     raw
-    |> String.split("\n")
-    |> Enum.map(&String.trim/1)
-    |> Enum.filter(fn s -> s != "" end)
+    |> String.split("\n", trim: true)
     |> Enum.map(&parse_instruction/1)
   end
 
