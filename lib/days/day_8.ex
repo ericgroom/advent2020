@@ -67,8 +67,7 @@ defmodule Advent2020.Days.Day8 do
     end
   end
 
-  defp corruptable?({:nop, _value}), do: true
-  defp corruptable?({:jmp, _value}), do: true
+  defp corruptable?({op, _value}) when op in [:nop, :jmp], do: true
   defp corruptable?(_instr), do: false
 
   defp repair_corruption(context, corrupted_at) do
