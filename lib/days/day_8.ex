@@ -1,36 +1,7 @@
 defmodule Advent2020.Days.Day8 do
   use Advent2020.Day, day: 8
 
-  defmodule ExecutionContext do
-    @type address() :: integer()
-    @type op() :: :nop | :acc | :jmp
-    @type instruction() :: {op(), integer()}
-    @type t() :: %__MODULE__{
-            memory: %{address() => instruction()},
-            instruction_ptr: address(),
-            accumulator: integer()
-          }
-    defstruct [:memory, :instruction_ptr, :accumulator]
-
-    @spec new([instruction()]) :: t()
-    def new(instructions) do
-      memory =
-        instructions
-        |> Stream.with_index()
-        |> Stream.map(fn {op, ptr} -> {ptr, op} end)
-        |> Enum.into(%{})
-
-      %__MODULE__{memory: memory, instruction_ptr: 0, accumulator: 0}
-    end
-
-    @spec get_head(t()) :: instruction() | nil
-    def get_head(%__MODULE__{memory: memory, instruction_ptr: instruction_ptr}),
-      do: memory[instruction_ptr]
-
-    def next(context), do: update_in(context.instruction_ptr, &(&1 + 1))
-
-    def reset(context), do: %__MODULE__{memory: context.memory, instruction_ptr: 0, accumulator: 0}
-  end
+  alias Advent2020.VM.ExecutionContext
 
   def part_one do
     @input
@@ -70,7 +41,6 @@ defmodule Advent2020.Days.Day8 do
     end
   end
 
-  @spec run_with_corruption_correction(ExecutionContext.t(), List.t()) :: integer()
   def run_with_corruption_correction(context, previous_instructions \\ []) do
     if Enum.member?(previous_instructions, context.instruction_ptr) do
 
@@ -119,7 +89,6 @@ defmodule Advent2020.Days.Day8 do
     end
   end
 
-  @spec run_until_completion(ExecutionContext.t(), MapSet.new()) :: {:cycle, integer()} | {:completed, integer()}
   defp run_until_completion(context, previous_instructions \\ MapSet.new()) do
     current_ptr = context.instruction_ptr
 

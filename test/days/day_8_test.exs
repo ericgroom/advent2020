@@ -2,7 +2,7 @@ defmodule Advent2020.Days.Day8Test do
   use ExUnit.Case, async: true
 
   import Advent2020.Days.Day8
-  alias Advent2020.Days.Day8.ExecutionContext
+  alias Advent2020.VM.ExecutionContext
 
   @sample """
   nop +0
