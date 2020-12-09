@@ -35,4 +35,20 @@ defmodule Advent2020.Days.Day9Test do
       assert part_one() == 1_504_371_145
     end
   end
+
+  describe "find_contiguous_sum/2" do
+    test "sample input" do
+      assert find_contiguous_sum(@sample, 127) == [40, 47, 25, 15]
+    end
+  end
+
+  describe "find_summed_weakness/2" do
+    test "sample input" do
+      assert find_summed_weakness(@sample, 5) == 62
+    end
+
+    test "real input" do
+      assert part_two() == 183_278_487
+    end
+  end
 end
