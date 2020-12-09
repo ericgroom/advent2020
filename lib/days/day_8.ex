@@ -29,7 +29,7 @@ defmodule Advent2020.Days.Day8 do
 
     def next(context), do: update_in(context.instruction_ptr, &(&1 + 1))
 
-    def reset(context), do: new(context.memory |> Map.values())
+    def reset(context), do: %__MODULE__{memory: context.memory, instruction_ptr: 0, accumulator: 0}
   end
 
   def part_one do
@@ -70,13 +70,8 @@ defmodule Advent2020.Days.Day8 do
     end
   end
 
-  def run_with_corruption_correction(context) do
-    run_with_corruption_correction(context, context, [])
-  end
-
-  @spec run_with_corruption_correction(ExecutionContext.t(), ExecutionContext.t(), List.t()) ::
-          integer()
-  defp run_with_corruption_correction(context, og, previous_instructions) do
+  @spec run_with_corruption_correction(ExecutionContext.t(), List.t()) :: integer()
+  def run_with_corruption_correction(context, previous_instructions \\ []) do
     if Enum.member?(previous_instructions, context.instruction_ptr) do
 
       previous_occurrence =
@@ -85,8 +80,10 @@ defmodule Advent2020.Days.Day8 do
       cycle = Enum.slice(previous_instructions, 0..previous_occurrence)
       culprits = Enum.filter(cycle, fn ptr -> corruptable?(context.memory[ptr]) end)
 
+      original_context = ExecutionContext.reset(context)
+
       Enum.find_value(culprits, fn ptr ->
-        new_context = repair_corruption(og, ptr)
+        new_context = repair_corruption(original_context, ptr)
 
         case run_until_completion(new_context) do
           {:cycle, _} ->
@@ -98,7 +95,7 @@ defmodule Advent2020.Days.Day8 do
     else
       with_current = [context.instruction_ptr | previous_instructions]
       new_context = run_head(context)
-      run_with_corruption_correction(new_context, og, with_current)
+      run_with_corruption_correction(new_context, with_current)
     end
   end
 
