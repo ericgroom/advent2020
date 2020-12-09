@@ -31,7 +31,7 @@ defmodule Advent2020.Days.Day8 do
   end
 
   def run_until_loop_detected(context) do
-    case run_until_completion(context) do
+    case run(context) do
       {:cycle, acc} ->
         acc
       {:completed, _acc} ->
@@ -53,7 +53,7 @@ defmodule Advent2020.Days.Day8 do
       Enum.find_value(culprits, fn ptr ->
         new_context = repair_corruption(original_context, ptr)
 
-        case run_until_completion(new_context) do
+        case run(new_context) do
           {:cycle, _} ->
             nil
           {:completed, acc} ->
@@ -87,7 +87,7 @@ defmodule Advent2020.Days.Day8 do
     end
   end
 
-  defp run_until_completion(context, previous_instructions \\ MapSet.new()) do
+  defp run(context, previous_instructions \\ MapSet.new()) do
     current_ptr = context.instruction_ptr
 
     if MapSet.member?(previous_instructions, current_ptr) do
@@ -100,7 +100,7 @@ defmodule Advent2020.Days.Day8 do
           {:completed, acc}
 
         context ->
-          run_until_completion(context, with_current)
+          run(context, with_current)
       end
     end
   end
