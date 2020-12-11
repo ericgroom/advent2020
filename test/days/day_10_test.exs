@@ -70,4 +70,18 @@ defmodule Advent2020.Days.Day10Test do
       assert part_one() == 2040
     end
   end
+
+  describe "count_adapter_arrangements/1" do
+    test "small sample" do
+      assert count_adapter_arrangements(@small_sample) == 8
+    end
+
+    test "large sample" do
+      assert count_adapter_arrangements(@large_sample) == 19208
+    end
+
+    test "real input" do
+      assert part_two() == 28346956187648
+    end
+  end
 end
