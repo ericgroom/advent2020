@@ -81,7 +81,7 @@ defmodule Advent2020.Days.Day10Test do
     end
 
     test "real input" do
-      assert part_two() == 28346956187648
+      assert part_two() == 28_346_956_187_648
     end
   end
 end
