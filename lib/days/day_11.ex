@@ -16,14 +16,14 @@ defmodule Advent2020.Days.Day11 do
   def part_one do
     @input
     |> parse()
-    |> perform_musical_chairs(&transform_adjacent/2)
+    |> perform_musical_chairs(&adjacent_neighbors/2, 4)
     |> count_occupied()
   end
 
   def part_two do
     @input
     |> parse()
-    |> perform_musical_chairs(&transform_visible/2)
+    |> perform_musical_chairs(&visible_neighbors/2, 5)
     |> count_occupied()
   end
 
@@ -33,8 +33,8 @@ defmodule Advent2020.Days.Day11 do
     |> Enum.count(fn cell -> cell == :occupied_seat end)
   end
 
-  def perform_musical_chairs(%Grid{} = grid, transform) do
-    Stream.iterate(grid, fn prev_grid -> perform_cycle(prev_grid, transform) end)
+  def perform_musical_chairs(%Grid{} = grid, neighbors, cramped_count) do
+    Stream.iterate(grid, fn prev_grid -> perform_cycle(prev_grid, neighbors, cramped_count) end)
     |> Enum.reduce_while(nil, fn current, previous ->
       if not is_nil(previous) and Grid.equals?(current, previous) do
         {:halt, current}
@@ -44,40 +44,23 @@ defmodule Advent2020.Days.Day11 do
     end)
   end
 
-  def perform_cycle(%Grid{} = grid, transform) do
+  def perform_cycle(%Grid{} = grid, neighbors, cramped_count) do
     Grid.coords(grid)
-    |> Enum.into(%{}, &transform.(grid, &1))
+    |> Enum.into(%{}, &transform(grid, &1, neighbors, cramped_count))
     |> Grid.new()
   end
 
-  def transform_adjacent(grid, point) do
+  def transform(grid, point, neighbors, cramped_count) do
     current = Grid.at(grid, point)
-    neighbors = neighbors(grid, point)
+    neighbors = neighbors.(grid, point)
+    occupied_seats = Map.get(neighbors, :occupied_seat, 0)
 
-    cond do
-      current == :empty_seat and Map.get(neighbors, :occupied_seat, 0) == 0 ->
+    case {current, occupied_seats} do
+      {:empty_seat, 0} ->
         {point, :occupied_seat}
-
-      current == :occupied_seat and Map.get(neighbors, :occupied_seat, 0) >= 4 ->
+      {:occupied_seat, count} when count >= cramped_count ->
         {point, :empty_seat}
-
-      true ->
-        {point, current}
-    end
-  end
-
-  def transform_visible(grid, point) do
-    current = Grid.at(grid, point)
-    neighbors = visible_neighbors(grid, point)
-
-    cond do
-      current == :empty_seat and Map.get(neighbors, :occupied_seat, 0) == 0 ->
-        {point, :occupied_seat}
-
-      current == :occupied_seat and Map.get(neighbors, :occupied_seat, 0) >= 5 ->
-        {point, :empty_seat}
-
-      true ->
+      _ ->
         {point, current}
     end
   end
@@ -103,7 +86,7 @@ defmodule Advent2020.Days.Day11 do
     end
   end
 
-  def neighbors(%Grid{} = grid, point) do
+  def adjacent_neighbors(%Grid{} = grid, point) do
     Vec2D.diagonal_unit_vectors()
     |> Enum.map(fn unit -> Vec2D.add(point, unit) end)
     |> Enum.map(fn point -> Grid.at(grid, point) end)

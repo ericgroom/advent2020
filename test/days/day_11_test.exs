@@ -53,7 +53,7 @@ defmodule Advent2020.Days.Day11Test do
   describe "perform_musical_chairs" do
     test "sample input" do
       input = parse(@sample)
-      output = perform_musical_chairs(input, &transform_adjacent/2)
+      output = perform_musical_chairs(input, &adjacent_neighbors/2, 4)
       count = count_occupied(output)
       assert count == 37
     end
@@ -64,7 +64,7 @@ defmodule Advent2020.Days.Day11Test do
 
     test "sample input part 2" do
       input = parse(@sample)
-      output = perform_musical_chairs(input, &transform_visible/2)
+      output = perform_musical_chairs(input, &visible_neighbors/2, 5)
       count = count_occupied(output)
       assert count == 26
     end
@@ -74,26 +74,11 @@ defmodule Advent2020.Days.Day11Test do
     end
   end
 
-  describe "perform_cycle/1" do
+  describe "perform_cycle/3" do
     test "sample input" do
       input = parse(@sample_one)
-      output = perform_cycle(input, &transform_adjacent/2)
+      output = perform_cycle(input, &adjacent_neighbors/2, 4)
       assert Grid.equals?(output, parse(@sample_two))
-    end
-  end
-
-  describe "neighbors/2" do
-    test "sample" do
-      input = parse(@sample_one)
-      assert neighbors(input, {1, 1}) == %{occupied_seat: 6, floor: 2}
-
-      assert neighbors(input, {0, 0}) == %{
-               occupied_seat: 2,
-               floor: 1,
-               invalid_coord: 5
-             }
-
-      assert neighbors(input, {9, 0}) == %{occupied_seat: 3, invalid_coord: 5}
     end
   end
 end
