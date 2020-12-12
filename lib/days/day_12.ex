@@ -24,24 +24,15 @@ defmodule Advent2020.Days.Day12 do
     |> Enum.map(&parse_instruction/1)
   end
 
-  def distance_from_start({x, y, _heading}) do
-    abs(x) + abs(y)
-  end
-
-  def distance_from_start({{x, y}, {_wx, _wy}}) do
-    abs(x) + abs(y)
-  end
+  def distance_from_start({x, y, _heading}), do: abs(x) + abs(y)
+  def distance_from_start({{x, y}, {_wx, _wy}}), do: abs(x) + abs(y)
 
   def follow_navigation(chart) do
-    Enum.reduce(chart, {0, 0, :east}, fn adjustment, pos ->
-      adjust_ship_position(pos, adjustment)
-    end)
+    Enum.reduce(chart, {0, 0, :east}, &adjust_ship_position(&2, &1))
   end
 
   def follow_waypoint_navigation(chart) do
-    Enum.reduce(chart, {{0, 0}, {10, 1}}, fn adjustment, pos ->
-      adjust_ship_waypoint_pos(pos, adjustment)
-    end)
+    Enum.reduce(chart, {{0, 0}, {10, 1}}, &adjust_ship_waypoint_pos(&2, &1))
   end
 
 
