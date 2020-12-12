@@ -27,7 +27,7 @@ defmodule Advent2020.DataStructures.CycledGrid do
     defstruct [:x, :y]
   end
 
-  defp translate_coord(%CycledGrid{row_length: row_length}, {x,  y}) do
+  defp translate_coord(%CycledGrid{row_length: row_length}, {x, y}) do
     x = rem(x, row_length)
     %UncycledCoord{x: x, y: y}
   end

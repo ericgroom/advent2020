@@ -58,8 +58,10 @@ defmodule Advent2020.Days.Day11 do
     case {current, occupied_seats} do
       {:empty_seat, 0} ->
         {point, :occupied_seat}
+
       {:occupied_seat, count} when count >= cramped_count ->
         {point, :empty_seat}
+
       _ ->
         {point, current}
     end
