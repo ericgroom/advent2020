@@ -78,8 +78,7 @@ defmodule Advent2020.Days.Day11Test do
     test "sample input" do
       input = parse(@sample_one)
       output = perform_cycle(input, &transform_adjacent/2)
-      as_s = to_s(output)
-      assert as_s == String.trim(@sample_two)
+      assert Grid.equals?(output, parse(@sample_two))
     end
   end
 

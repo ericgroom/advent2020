@@ -44,26 +44,6 @@ defmodule Advent2020.Days.Day11 do
     end)
   end
 
-  def to_s(grid) do
-    Grid.nested_coords(grid)
-    |> Enum.map(fn row ->
-      Enum.map(row, fn point ->
-        case Grid.at(grid, point) do
-          :empty_seat ->
-            "L"
-
-          :occupied_seat ->
-            "#"
-
-          :floor ->
-            "."
-        end
-      end)
-      |> Enum.join("")
-    end)
-    |> Enum.join("\n")
-  end
-
   def perform_cycle(%Grid{} = grid, transform) do
     Grid.coords(grid)
     |> Enum.map(&transform.(grid, &1))

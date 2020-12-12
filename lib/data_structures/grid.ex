@@ -5,10 +5,14 @@ defmodule Advent2020.DataStructures.Grid do
   alias __MODULE__
 
   def new() do
-    %Grid{data: %{}, rows: 0, cols: 0}
+    %Grid{data: %{}}
   end
 
-  def new(nested_list) do
+  def new(coord_map) when is_map(coord_map) do
+    %Grid{data: coord_map}
+  end
+
+  def new(nested_list) when is_list(nested_list) do
     rows = Enum.count(nested_list)
     cols = Enum.at(nested_list, 0, []) |> Enum.count()
 
@@ -35,23 +39,12 @@ defmodule Advent2020.DataStructures.Grid do
     Map.equal?(data_one, data_two)
   end
 
-  def put(%Grid{data: data} = grid, %Vec2D{} = coord, value) do
-    rows = max(grid.rows, coord.y + 1)
-    cols = max(grid.cols, coord.x + 1)
+  def put(%Grid{data: data}, %Vec2D{} = coord, value) do
     new_grid = Map.put(data, coord, value)
-    %Grid{data: new_grid, rows: rows, cols: cols}
+    %Grid{data: new_grid}
   end
 
   def coords(%Grid{data: data}) do
     data |> Map.keys()
-  end
-
-  def nested_coords(%Grid{rows: rows, cols: cols}) do
-    0..(rows - 1)
-    |> Stream.map(fn row_i ->
-      Stream.map(0..(cols - 1), fn col_i ->
-        Vec2D.new({col_i, row_i})
-      end)
-    end)
   end
 end
