@@ -1,5 +1,5 @@
 defmodule Advent2020.DataStructures.Grid do
-  defstruct [:data, :rows, :cols]
+  defstruct [:data]
 
   alias Advent2020.DataStructures.Vec2D
   alias __MODULE__
@@ -13,9 +13,6 @@ defmodule Advent2020.DataStructures.Grid do
   end
 
   def new(nested_list) when is_list(nested_list) do
-    rows = Enum.count(nested_list)
-    cols = Enum.at(nested_list, 0, []) |> Enum.count()
-
     data =
       nested_list
       |> Stream.with_index()
@@ -28,7 +25,7 @@ defmodule Advent2020.DataStructures.Grid do
       end)
       |> Enum.into(%{})
 
-    %Grid{data: data, rows: rows, cols: cols}
+    %Grid{data: data}
   end
 
   def at(%Grid{} = grid, %Vec2D{} = coord) do
