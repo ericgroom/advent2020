@@ -66,9 +66,7 @@ defmodule Advent2020.Days.Day11 do
 
   def perform_cycle(%Grid{} = grid, transform) do
     Grid.coords(grid)
-    |> Enum.map(fn point ->
-      transform.(grid, point)
-    end)
+    |> Enum.map(&transform.(grid, &1))
     |> Enum.reduce(Grid.new(), fn {coord, value}, acc ->
       Grid.put(acc, coord, value)
     end)
