@@ -24,6 +24,14 @@ defmodule Advent2020.Days.Day12 do
     |> Enum.map(&parse_instruction/1)
   end
 
+  defp parse_instruction({"N", amount}), do: {:north, String.to_integer(amount)}
+  defp parse_instruction({"S", amount}), do: {:south, String.to_integer(amount)}
+  defp parse_instruction({"E", amount}), do: {:east, String.to_integer(amount)}
+  defp parse_instruction({"W", amount}), do: {:west, String.to_integer(amount)}
+  defp parse_instruction({"F", amount}), do: {:forward, String.to_integer(amount)}
+  defp parse_instruction({"L", amount}), do: {:left, String.to_integer(amount)}
+  defp parse_instruction({"R", amount}), do: {:right, String.to_integer(amount)}
+
   def distance_from_start({x, y, _heading}), do: abs(x) + abs(y)
   def distance_from_start({{x, y}, {_wx, _wy}}), do: abs(x) + abs(y)
 
@@ -34,15 +42,6 @@ defmodule Advent2020.Days.Day12 do
   def follow_waypoint_navigation(chart) do
     Enum.reduce(chart, {{0, 0}, {10, 1}}, &adjust_ship_waypoint_pos(&2, &1))
   end
-
-
-  defp parse_instruction({"N", amount}), do: {:north, String.to_integer(amount)}
-  defp parse_instruction({"S", amount}), do: {:south, String.to_integer(amount)}
-  defp parse_instruction({"E", amount}), do: {:east, String.to_integer(amount)}
-  defp parse_instruction({"W", amount}), do: {:west, String.to_integer(amount)}
-  defp parse_instruction({"F", amount}), do: {:forward, String.to_integer(amount)}
-  defp parse_instruction({"L", amount}), do: {:left, String.to_integer(amount)}
-  defp parse_instruction({"R", amount}), do: {:right, String.to_integer(amount)}
 
   defp adjust_ship_position({x, y, heading}, {:north, amount}), do: {x, y + amount, heading}
   defp adjust_ship_position({x, y, heading}, {:south, amount}), do: {x, y - amount, heading}
@@ -73,7 +72,6 @@ defmodule Advent2020.Days.Day12 do
   defp decode_heading(1), do: :east
   defp decode_heading(2), do: :south
   defp decode_heading(3), do: :west
-
 
   def adjust_ship_waypoint_pos({{sx, sy}, {wx, wy}}, {:north, amount}), do: {{sx, sy}, {wx, wy + amount}}
   def adjust_ship_waypoint_pos({{sx, sy}, {wx, wy}}, {:south, amount}), do: {{sx, sy}, {wx, wy - amount}}
