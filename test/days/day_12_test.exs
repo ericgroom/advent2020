@@ -31,4 +31,10 @@ defmodule Advent2020.Days.Day12Test do
       assert part_one() == 2879
     end
   end
+
+  describe "follow_waypoint_navigation/1" do
+    test "sample input" do
+      assert follow_waypoint_navigation(@sample) |> distance_from_start() == 286
+    end
+  end
 end

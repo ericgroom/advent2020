@@ -10,6 +10,13 @@ defmodule Advent2020.Days.Day12 do
     |> distance_from_start()
   end
 
+  def part_two do
+    @input
+    |> parse()
+    |> follow_waypoint_navigation()
+    |> distance_from_start()
+  end
+
   def parse(raw) do
     raw
     |> String.split("\n", trim: true)
@@ -21,11 +28,22 @@ defmodule Advent2020.Days.Day12 do
     abs(x) + abs(y)
   end
 
+  def distance_from_start({{x, y}, {_wx, _wy}}) do
+    abs(x) + abs(y)
+  end
+
   def follow_navigation(chart) do
     Enum.reduce(chart, {0, 0, :east}, fn adjustment, pos ->
       adjust_ship_position(pos, adjustment)
     end)
   end
+
+  def follow_waypoint_navigation(chart) do
+    Enum.reduce(chart, {{0, 0}, {10, 1}}, fn adjustment, pos ->
+      adjust_ship_waypoint_pos(pos, adjustment)
+    end)
+  end
+
 
   defp parse_instruction({"N", amount}), do: {:north, String.to_integer(amount)}
   defp parse_instruction({"S", amount}), do: {:south, String.to_integer(amount)}
@@ -64,4 +82,17 @@ defmodule Advent2020.Days.Day12 do
   defp decode_heading(1), do: :east
   defp decode_heading(2), do: :south
   defp decode_heading(3), do: :west
+
+
+  def adjust_ship_waypoint_pos({{sx, sy}, {wx, wy}}, {:north, amount}), do: {{sx, sy}, {wx, wy + amount}}
+  def adjust_ship_waypoint_pos({{sx, sy}, {wx, wy}}, {:south, amount}), do: {{sx, sy}, {wx, wy - amount}}
+  def adjust_ship_waypoint_pos({{sx, sy}, {wx, wy}}, {:east, amount}), do: {{sx, sy}, {wx + amount, wy}}
+  def adjust_ship_waypoint_pos({{sx, sy}, {wx, wy}}, {:west, amount}), do: {{sx, sy}, {wx - amount, wy}}
+  def adjust_ship_waypoint_pos({{sx, sy}, {wx, wy}}, {:forward, amount}), do: {{sx + (wx * amount), sy + (wy * amount)}, {wx, wy}}
+  def adjust_ship_waypoint_pos({{sx, sy}, {wx, wy}}, {:left, 90}), do: {{sx, sy}, {-wy, wx}}
+  def adjust_ship_waypoint_pos({{sx, sy}, {wx, wy}}, {:left, 180}), do: {{sx, sy}, {-wx, -wy}}
+  def adjust_ship_waypoint_pos({{sx, sy}, {wx, wy}}, {:left, 270}), do: {{sx, sy}, {wy, -wx}}
+  def adjust_ship_waypoint_pos({{sx, sy}, {wx, wy}}, {:right, 90}), do: {{sx, sy}, {wy, -wx}}
+  def adjust_ship_waypoint_pos({{sx, sy}, {wx, wy}}, {:right, 180}), do: {{sx, sy}, {-wx, -wy}}
+  def adjust_ship_waypoint_pos({{sx, sy}, {wx, wy}}, {:right, 270}), do: {{sx, sy}, {-wy, wx}}
 end
