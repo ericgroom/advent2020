@@ -6,7 +6,7 @@ defmodule Advent2020.Days.Day3 do
   def part_one do
     @input
     |> parse()
-    |> count_trees(Vec2D.new({3, 1}))
+    |> count_trees({3, 1})
   end
 
   def part_two do
@@ -34,16 +34,15 @@ defmodule Advent2020.Days.Day3 do
     ]
 
     slopes
-    |> Enum.map(&Vec2D.new/1)
     |> Enum.map(&count_trees(grid, &1))
     |> Enum.reduce(1, &*/2)
   end
 
-  def count_trees(%CycledGrid{} = grid, %Vec2D{} = slope) do
-    count_trees(grid, slope, %Vec2D{x: 0, y: 0})
+  def count_trees(%CycledGrid{} = grid, slope) do
+    count_trees(grid, slope, {0, 0})
   end
 
-  defp count_trees(%CycledGrid{} = grid, %Vec2D{} = slope, %Vec2D{} = coord) do
+  defp count_trees(%CycledGrid{} = grid, slope, coord) do
     case CycledGrid.at(grid, coord) do
       :invalid_coord -> 0
       :tree -> 1 + count_trees(grid, slope, Vec2D.add(slope, coord))

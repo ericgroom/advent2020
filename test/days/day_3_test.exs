@@ -1,7 +1,7 @@
 defmodule Advent2020.Days.Day3Test do
   use ExUnit.Case, async: true
 
-  alias Advent2020.DataStructures.{CycledGrid, Vec2D}
+  alias Advent2020.DataStructures.CycledGrid
   import Advent2020.Days.Day3
 
   @sample_input """
@@ -22,16 +22,16 @@ defmodule Advent2020.Days.Day3Test do
     test "input can be parsed into CycledGrid" do
       grid = parse(@sample_input)
       assert grid.row_length == 11
-      assert CycledGrid.at(grid, %Vec2D{x: 0, y: 0}) == :empty
-      assert CycledGrid.at(grid, %Vec2D{x: 0, y: 1}) == :tree
-      assert CycledGrid.at(grid, %Vec2D{x: 13, y: 0}) == :tree
+      assert CycledGrid.at(grid, {0, 0}) == :empty
+      assert CycledGrid.at(grid, {0, 1}) == :tree
+      assert CycledGrid.at(grid, {13, 0}) == :tree
     end
   end
 
   describe "count_trees/2" do
     test "sample input" do
       grid = parse(@sample_input)
-      assert count_trees(grid, %Vec2D{x: 3, y: 1}) == 7
+      assert count_trees(grid, {3, 1}) == 7
     end
 
     test "real input" do

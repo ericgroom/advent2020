@@ -2,7 +2,7 @@ defmodule Advent2020.Days.Day11Test do
   use ExUnit.Case, async: true
 
   import Advent2020.Days.Day11
-  alias Advent2020.DataStructures.{Grid, Vec2D}
+  alias Advent2020.DataStructures.{Grid}
 
   @sample """
   L.LL.LL.LL
@@ -85,15 +85,15 @@ defmodule Advent2020.Days.Day11Test do
   describe "neighbors/2" do
     test "sample" do
       input = parse(@sample_one)
-      assert neighbors(input, Vec2D.new({1, 1})) == %{occupied_seat: 6, floor: 2}
+      assert neighbors(input, {1, 1}) == %{occupied_seat: 6, floor: 2}
 
-      assert neighbors(input, Vec2D.new({0, 0})) == %{
+      assert neighbors(input, {0, 0}) == %{
                occupied_seat: 2,
                floor: 1,
                invalid_coord: 5
              }
 
-      assert neighbors(input, Vec2D.new({9, 0})) == %{occupied_seat: 3, invalid_coord: 5}
+      assert neighbors(input, {9, 0}) == %{occupied_seat: 3, invalid_coord: 5}
     end
   end
 end

@@ -1,7 +1,6 @@
 defmodule Advent2020.DataStructures.Grid do
   defstruct [:data]
 
-  alias Advent2020.DataStructures.Vec2D
   alias __MODULE__
 
   def new() do
@@ -20,7 +19,7 @@ defmodule Advent2020.DataStructures.Grid do
         row
         |> Stream.with_index()
         |> Stream.map(fn {cell, col_i} ->
-          {Vec2D.new({col_i, row_i}), cell}
+          {{col_i, row_i}, cell}
         end)
       end)
       |> Enum.into(%{})
@@ -28,7 +27,7 @@ defmodule Advent2020.DataStructures.Grid do
     %Grid{data: data}
   end
 
-  def at(%Grid{} = grid, %Vec2D{} = coord) do
+  def at(%Grid{} = grid, {_x, _y} = coord) do
     Map.get(grid.data, coord, :invalid_coord)
   end
 
@@ -36,7 +35,7 @@ defmodule Advent2020.DataStructures.Grid do
     Map.equal?(data_one, data_two)
   end
 
-  def put(%Grid{data: data}, %Vec2D{} = coord, value) do
+  def put(%Grid{data: data}, {_x, _y} = coord, value) do
     new_grid = Map.put(data, coord, value)
     %Grid{data: new_grid}
   end
