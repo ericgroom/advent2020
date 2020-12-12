@@ -107,31 +107,20 @@ defmodule Advent2020.Days.Day11 do
   def visible_neighbors(grid, point) do
     Vec2D.unit_vectors(diagonal: true)
     |> Enum.map(fn direction ->
-      traverse(grid, point, direction, fn
-        :invalid_coord ->
-          :halt
-
-        :empty_seat ->
-          :halt
-
-        :occupied_seat ->
-          :halt
-
-        :floor ->
-          :cont
-      end)
+      find_first_visible_seat(grid, point, direction)
     end)
     |> Enum.frequencies()
   end
 
-  defp traverse(grid, point, direction, predicate) do
-    next = Grid.at(grid, Vec2D.add(point, direction))
+  defp find_first_visible_seat(grid, point, direction) do
+    next_point = Vec2D.add(point, direction)
+    next = Grid.at(grid, next_point)
 
-    case predicate.(next) do
-      :cont ->
-        traverse(grid, Vec2D.add(point, direction), direction, predicate)
+    case next do
+      :floor ->
+        find_first_visible_seat(grid, next_point, direction)
 
-      :halt ->
+      _ ->
         next
     end
   end
