@@ -69,9 +69,7 @@ defmodule Advent2020.Days.Day11 do
 
   def visible_neighbors(grid, point) do
     Vec2D.diagonal_unit_vectors()
-    |> Enum.map(fn direction ->
-      find_first_visible_seat(grid, point, direction)
-    end)
+    |> Enum.map(&find_first_visible_seat(grid, point, &1))
     |> Enum.frequencies()
   end
 
