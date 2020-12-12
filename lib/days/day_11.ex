@@ -20,6 +20,13 @@ defmodule Advent2020.Days.Day11 do
     |> count_occupied()
   end
 
+  def part_two do
+    @input
+    |> parse()
+    |> perform_musical_chairs(&transform_visible/2)
+    |> count_occupied()
+  end
+
   def count_occupied(grid) do
     grid.data
     |> Map.values()
@@ -29,7 +36,6 @@ defmodule Advent2020.Days.Day11 do
   def perform_musical_chairs(%Grid{} = grid, transform) do
     Stream.iterate(grid, fn prev_grid -> perform_cycle(prev_grid, transform) end)
     |> Enum.reduce_while(nil, fn current, previous ->
-
       if not is_nil(previous) and Grid.equals?(current, previous) do
         {:halt, current}
       else
@@ -69,19 +75,67 @@ defmodule Advent2020.Days.Day11 do
   end
 
   def transform_adjacent(grid, point) do
-      current = Grid.at(grid, point)
-      neighbors = neighbors(grid, point)
+    current = Grid.at(grid, point)
+    neighbors = neighbors(grid, point)
 
-      cond do
-          current == :empty_seat and Map.get(neighbors, :occupied_seat, 0) == 0 ->
-          {point, :occupied_seat}
+    cond do
+      current == :empty_seat and Map.get(neighbors, :occupied_seat, 0) == 0 ->
+        {point, :occupied_seat}
 
-          current == :occupied_seat and Map.get(neighbors, :occupied_seat, 0) >= 4 ->
-          {point, :empty_seat}
+      current == :occupied_seat and Map.get(neighbors, :occupied_seat, 0) >= 4 ->
+        {point, :empty_seat}
 
-          true ->
-          {point, current}
-      end
+      true ->
+        {point, current}
+    end
+  end
+
+  def transform_visible(grid, point) do
+    current = Grid.at(grid, point)
+    neighbors = visible_neighbors(grid, point)
+
+    cond do
+      current == :empty_seat and Map.get(neighbors, :occupied_seat, 0) == 0 ->
+        {point, :occupied_seat}
+
+      current == :occupied_seat and Map.get(neighbors, :occupied_seat, 0) >= 5 ->
+        {point, :empty_seat}
+
+      true ->
+        {point, current}
+    end
+  end
+
+  def visible_neighbors(grid, point) do
+    Vec2D.unit_vectors(diagonal: true)
+    |> Enum.map(fn direction ->
+      traverse(grid, point, direction, fn
+        :invalid_coord ->
+          :halt
+
+        :empty_seat ->
+          :halt
+
+        :occupied_seat ->
+          :halt
+
+        :floor ->
+          :cont
+      end)
+    end)
+    |> Enum.frequencies()
+  end
+
+  defp traverse(grid, point, direction, predicate) do
+    next = Grid.at(grid, Vec2D.add(point, direction))
+
+    case predicate.(next) do
+      :cont ->
+        traverse(grid, Vec2D.add(point, direction), direction, predicate)
+
+      :halt ->
+        next
+    end
   end
 
   def neighbors(%Grid{} = grid, %Vec2D{} = point) do

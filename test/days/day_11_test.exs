@@ -61,6 +61,17 @@ defmodule Advent2020.Days.Day11Test do
     test "real input" do
       assert part_one() == 2319
     end
+
+    test "sample input part 2" do
+      input = parse(@sample)
+      output = perform_musical_chairs(input, &transform_visible/2)
+      count = count_occupied(output)
+      assert count == 26
+    end
+
+    test "real input part two" do
+      assert part_two() == 2117
+    end
   end
 
   describe "perform_cycle/1" do
@@ -76,7 +87,13 @@ defmodule Advent2020.Days.Day11Test do
     test "sample" do
       input = parse(@sample_one)
       assert neighbors(input, Vec2D.new({1, 1})) == %{occupied_seat: 6, floor: 2}
-      assert neighbors(input, Vec2D.new({0, 0})) == %{occupied_seat: 2, floor: 1, invalid_coord: 5}
+
+      assert neighbors(input, Vec2D.new({0, 0})) == %{
+               occupied_seat: 2,
+               floor: 1,
+               invalid_coord: 5
+             }
+
       assert neighbors(input, Vec2D.new({9, 0})) == %{occupied_seat: 3, invalid_coord: 5}
     end
   end
