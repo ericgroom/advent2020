@@ -33,13 +33,14 @@ defmodule Advent2020.Days.Day13 do
     n_i = div(big_n, id)
     # n_i*x_i cong. 1 (mod id)
     reduced_n_i = rem(n_i, id)
-    x_i = Enum.find(integers(), fn x_i ->
-      rem(reduced_n_i*x_i, id) == 1
-    end)
+    x_i = inverse_mod(reduced_n_i, id)
     x_i * n_i * rem
   end
 
-  def integers(), do: 1..10000
+  def inverse_mod(a, m) do
+    1..10_000
+    |> Enum.find(fn x -> rem(a*x, m) == 1 end)
+  end
 
   def invert_rem(buses) do
     buses
