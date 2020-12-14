@@ -35,4 +35,35 @@ defmodule Advent2020.Days.Day14Test do
       assert part_one() == 13476250121721
     end
   end
+
+  describe "create_v2_mask/1" do
+    test "sample input" do
+      mask = create_v2_mask("000000000000000000000000000000X1001X")
+      applied = apply_v2_mask(mask, 42)
+      assert MapSet.new(applied) == MapSet.new([26, 27, 58, 59])
+    end
+
+    test "larger sample input" do
+      mask = create_v2_mask("00000000000000000000000000000000X0XX")
+      applied = apply_v2_mask(mask, 26)
+      assert MapSet.new(applied) == MapSet.new([16, 17, 18, 19, 24, 25, 26, 27])
+    end
+  end
+
+  describe "run_v2_program/1" do
+    test "sample input" do
+      input = [
+        {:mask, "000000000000000000000000000000X1001X"},
+        {:store, 42, 100},
+        {:mask, "00000000000000000000000000000000X0XX"},
+        {:store, 26, 1}
+      ]
+      output = run_v2_program(input)
+      assert sum_memory(output) == 208
+    end
+
+    test "real input" do
+      assert part_two() == 4463708436768
+    end
+  end
 end

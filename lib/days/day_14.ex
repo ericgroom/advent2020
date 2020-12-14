@@ -9,6 +9,13 @@ defmodule Advent2020.Days.Day14 do
     |> sum_memory()
   end
 
+  def part_two do
+    @input
+    |> parse()
+    |> run_v2_program()
+    |> sum_memory()
+  end
+
   def parse(raw) do
     mask_pattern = ~r/^(mask) = (\w+)$/
     store_pattern = ~r/^(mem)\[(\d+)\] = (\d+)$/
@@ -35,15 +42,54 @@ defmodule Advent2020.Days.Day14 do
     |> Enum.sum()
   end
 
+  def run_v2_program(instructions, mask \\ nil, memory \\ %{})
+  def run_v2_program([], _mask, memory), do: memory
+  def run_v2_program([h|t], mask, memory) do
+    case h do
+      {:mask, new_mask} ->
+        run_v2_program(t, create_v2_mask(new_mask), memory)
+      {:store, addr, value} ->
+        masked_addrs = apply_v2_mask(mask, addr)
+        new_mem = Enum.reduce(masked_addrs, memory, fn addr, acc -> Map.put(acc, addr, value) end)
+        run_v2_program(t, mask, new_mem)
+    end
+  end
+
   def run_program(instructions, mask \\ nil, memory \\ %{})
   def run_program([], _mask, memory), do: memory
-  def run_program([h|t] = instructions, mask, memory) do
+  def run_program([h|t], mask, memory) do
     case h do
       {:mask, new_mask} ->
         run_program(t, create_mask(new_mask), memory)
       {:store, addr, value} ->
         masked = apply_mask(mask, value)
         run_program(t, mask, Map.put(memory, addr, masked))
+    end
+  end
+
+  def apply_v2_mask(mask, num) do
+    mask
+    |> Enum.map(&apply_mask(&1, num))
+  end
+
+  def create_v2_mask(str) when is_binary(str) do
+    # We can leverage the v1 implementation by doing the following translation
+    # 0 -> X (X left unchanged in original)
+    # 1 -> 1 (1 overwrote in original)
+    # X -> [1, 0] recurse on both possible values
+    create_v2_masks(String.graphemes(str))
+  end
+
+  defp create_v2_masks(bits, so_far \\ "")
+  defp create_v2_masks([], so_far), do: [create_mask(so_far)]
+  defp create_v2_masks([h|t], so_far) do
+    case h do
+      "1" ->
+        create_v2_masks(t, so_far <> "1")
+      "0" ->
+        create_v2_masks(t, so_far <> "X")
+      "X" ->
+        create_v2_masks(t, so_far <> "1") ++ create_v2_masks(t, so_far <> "0")
     end
   end
 
