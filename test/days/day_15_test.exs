@@ -17,5 +17,9 @@ defmodule Advent2020.Days.Day15Test do
     test "real input" do
       assert part_one() == 929
     end
+
+    test "part two" do
+      assert part_two() == 16671510
+    end
   end
 end
