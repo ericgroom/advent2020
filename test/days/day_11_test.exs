@@ -58,6 +58,7 @@ defmodule Advent2020.Days.Day11Test do
       assert count == 37
     end
 
+    @tag :slow
     test "real input" do
       assert part_one() == 2319
     end
@@ -69,6 +70,7 @@ defmodule Advent2020.Days.Day11Test do
       assert count == 26
     end
 
+    @tag :slow
     test "real input part two" do
       assert part_two() == 2117
     end

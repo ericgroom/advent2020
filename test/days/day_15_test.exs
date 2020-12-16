@@ -18,6 +18,7 @@ defmodule Advent2020.Days.Day15Test do
       assert part_one() == 929
     end
 
+    @tag :slow
     test "part two" do
       assert part_two() == 16671510
     end
