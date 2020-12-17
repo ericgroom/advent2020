@@ -1,12 +1,19 @@
 defmodule Advent2020.Days.Day17 do
   use Advent2020.Day, day: 17
 
-  alias Advent2020.DataStructures.Vec3D
+  alias Advent2020.DataStructures.{Vec3D, Vec4D}
 
   def part_one do
     @input
     |> parse(&Vec3D.partial/2)
     |> run_n_cycles(Vec3D, 6)
+    |> count_active()
+  end
+
+  def part_two do
+    @input
+    |> parse(&Vec4D.partial/2)
+    |> run_n_cycles(Vec4D, 6)
     |> count_active()
   end
 

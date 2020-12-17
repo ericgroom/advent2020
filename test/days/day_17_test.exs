@@ -41,6 +41,13 @@ defmodule Advent2020.Days.Day17Test do
       assert active_count == 112
     end
 
+    test "six cycled, sample, 4d" do
+      input = parse(@sample, &Vec4D.partial/2)
+      output = run_n_cycles(input, Vec4D, 6)
+      active_count = Map.values(output) |> Enum.count(& &1 == :active)
+      assert active_count == 848
+    end
+
     test "real input" do
       assert part_one() == 306
     end
