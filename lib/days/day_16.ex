@@ -14,7 +14,7 @@ defmodule Advent2020.Days.Day16 do
     {rules, my_ticket, tickets}
   end
 
-  @rule ~r/(\w+): (\d+)-(\d+) or (\d+)-(\d+)/
+  @rule ~r/^([\w ]+): (\d+)-(\d+) or (\d+)-(\d+)$/
   defp parse_rules(raw) do
     raw
     |> String.split("\n", trim: true)
