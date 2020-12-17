@@ -42,7 +42,6 @@ defmodule Advent2020.Days.Day17 do
     |> Enum.into(%{}, fn coord ->
       neighbor_coords = vec.unit_vectors() |> Enum.map(&vec.add(&1, coord))
       neighbors = Enum.map(neighbor_coords, fn coord -> {coord, Map.get(with_immediate_neighbors, coord, :inactive)} end)
-      # TODO don't forget to add neighbors to grid
       {coord, determine_state(with_immediate_neighbors, coord, neighbors)}
     end)
   end
