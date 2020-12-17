@@ -6,6 +6,39 @@ defmodule Advent2020.Days.Day16 do
     sum_invalid_values(tickets, rules)
   end
 
+  end
+
+
+    end)
+  end
+
+    end)
+  end
+
+  def sum_invalid_values(tickets, rules) do
+    invalid_tickets = tickets
+    |> Enum.filter(fn ticket ->
+      invalid_ticket?(ticket, rules)
+    end)
+
+    invalid_tickets
+    |> Enum.map(fn ticket ->
+      Enum.filter(ticket, fn value -> invalid_value?(value, rules) end)
+    end)
+    |> List.flatten()
+    |> Enum.sum()
+  end
+
+  defp invalid_ticket?(ticket, rules) do
+    Enum.any?(ticket, fn value -> invalid_value?(value, rules) end)
+  end
+
+  defp invalid_value?(value, rules) do
+    not Enum.any?(rules, fn {_name, al..ah, bl..bh} ->
+        (al <= value and value <= ah) or (bl <= value and value <= bh)
+    end)
+  end
+
   def parse(raw) do
     [rules, my_ticket, tickets] = String.split(raw, "\n\n", trim: true)
     rules = parse_rules(rules)
@@ -35,30 +68,6 @@ defmodule Advent2020.Days.Day16 do
       values
       |> String.split(",")
       |> Enum.map(&String.to_integer/1)
-    end)
-  end
-
-  def sum_invalid_values(tickets, rules) do
-    invalid_tickets = tickets
-    |> Enum.filter(fn ticket ->
-      invalid_ticket?(ticket, rules)
-    end)
-
-    invalid_tickets
-    |> Enum.map(fn ticket ->
-      Enum.filter(ticket, fn value -> invalid_value?(value, rules) end)
-    end)
-    |> List.flatten()
-    |> Enum.sum()
-  end
-
-  defp invalid_ticket?(ticket, rules) do
-    Enum.any?(ticket, fn value -> invalid_value?(value, rules) end)
-  end
-
-  defp invalid_value?(value, rules) do
-    not Enum.any?(rules, fn {_name, al..ah, bl..bh} ->
-        (al <= value and value <= ah) or (bl <= value and value <= bh)
     end)
   end
 end
