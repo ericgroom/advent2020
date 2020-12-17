@@ -70,31 +70,4 @@ defmodule Advent2020.Days.Day16Test do
       assert part_two() == 2564529489989
     end
   end
-
-  describe "determine field positions" do
-    # test "determine_single_field_position/1" do
-    #   tickets = [
-    #     [3, 9, 18],
-    #     [15, 1, 5],
-    #     [5, 14, 9]
-    #   ]
-    #   assert determine_single_field_position(tickets, {"row", 0..5, 8..19}) == 0
-    #   assert determine_single_field_position(tickets, {"class", 0..1, 4..19}) == 1
-    #   assert determine_single_field_position(tickets, {"seat", 0..13, 16..19}) == 2
-    # end
-
-    # test "determine_field_order" do
-    #   tickets = [
-    #     [3, 9, 18],
-    #     [15, 1, 5],
-    #     [5, 14, 9]
-    #   ]
-    #   rules = [
-    #     {"row", 0..5, 8..19},
-    #     {"class", 0..1, 4..19},
-    #     {"seat", 0..13, 16..19},
-    #   ]
-    #   assert determine_field_order(tickets, rules) == ["row", "class", "seat"]
-    # end
-  end
 end
