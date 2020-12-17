@@ -55,4 +55,15 @@ defmodule Advent2020.Days.Day17Test do
       assert Enum.count(units) == MapSet.size(unique_units)
     end
   end
+
+  describe "Vec4D.unit_vectors/0" do
+    alias Advent2020.DataStructures.Vec4D
+
+    test "has expected number of units" do
+      units = Vec4D.unit_vectors()
+      unique_units = MapSet.new(units)
+      assert Enum.count(units) == 80
+      assert Enum.count(units) == MapSet.size(unique_units)
+    end
+  end
 end
