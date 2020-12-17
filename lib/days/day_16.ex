@@ -43,7 +43,7 @@ defmodule Advent2020.Days.Day16 do
   end
 
   defp reduce_valid_columns_for_rules(rules_columns) do
-    all_done = Enum.all?(rules_columns, fn {rule, columns} -> MapSet.size(columns) == 1 end)
+    all_done = Enum.all?(rules_columns, fn {_rule, columns} -> MapSet.size(columns) == 1 end)
     if all_done do
       rules_columns
     else
