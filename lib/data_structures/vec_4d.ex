@@ -1,4 +1,6 @@
 defmodule Advent2020.DataStructures.Vec4D do
+  def partial(x, y), do: {x, y, 0, 0}
+
   def add({x1, y1, z1, w1}, {x2, y2, z2, w2}), do: {x1 + x2, y1 + y2, z1 + z2, w1 + w2}
 
   @units for x <- -1..1,
