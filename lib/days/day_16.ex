@@ -8,33 +8,23 @@ defmodule Advent2020.Days.Day16 do
 
   end
 
-
-    end)
-  end
-
-    end)
-  end
-
   def sum_invalid_values(tickets, rules) do
-    invalid_tickets = tickets
-    |> Enum.filter(fn ticket ->
-      invalid_ticket?(ticket, rules)
-    end)
+    {_valid, invalid} = partition_valid_invalid(tickets, rules)
 
-    invalid_tickets
-    |> Enum.map(fn ticket ->
-      Enum.filter(ticket, fn value -> invalid_value?(value, rules) end)
-    end)
-    |> List.flatten()
-    |> Enum.sum()
+    invalid_values = for ticket <- invalid, value <- ticket, not valid_value?(value, rules), do: value
+    Enum.sum(invalid_values)
   end
 
-  defp invalid_ticket?(ticket, rules) do
-    Enum.any?(ticket, fn value -> invalid_value?(value, rules) end)
+  defp partition_valid_invalid(tickets, rules) do
+    Enum.split_with(tickets, &valid_ticket?(&1, rules))
   end
 
-  defp invalid_value?(value, rules) do
-    not Enum.any?(rules, fn {_name, al..ah, bl..bh} ->
+  defp valid_ticket?(ticket, rules) do
+    Enum.all?(ticket, fn value -> valid_value?(value, rules) end)
+  end
+
+  defp valid_value?(value, rules) do
+    Enum.any?(rules, fn {_name, al..ah, bl..bh} ->
         (al <= value and value <= ah) or (bl <= value and value <= bh)
     end)
   end
