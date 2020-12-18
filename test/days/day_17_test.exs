@@ -41,6 +41,7 @@ defmodule Advent2020.Days.Day17Test do
       assert active_count == 112
     end
 
+    @tag :slow
     test "six cycled, sample, 4d" do
       input = parse(@sample, &Vec4D.partial/2)
       output = run_n_cycles(input, Vec4D, 6)
@@ -50,6 +51,11 @@ defmodule Advent2020.Days.Day17Test do
 
     test "real input" do
       assert part_one() == 306
+    end
+
+    @tag :slow
+    test "real input 4d" do
+      assert part_two() == 2572
     end
   end
 
