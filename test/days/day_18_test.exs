@@ -3,6 +3,12 @@ defmodule Advent2020.Days.Day18Test do
 
   import Advent2020.Days.Day18
 
+  describe "summed output" do
+    test "real input" do
+      assert part_one() == 8298263963837
+    end
+  end
+
   describe "eval/1" do
     test "manual AST sanity check" do
       # 1 + 2

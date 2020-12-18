@@ -1,6 +1,20 @@
 defmodule Advent2020.Days.Day18 do
   use Advent2020.Day, day: 18
 
+  def part_one do
+    @input
+    |> parse()
+    |> Enum.map(&build_ast/1)
+    |> Enum.map(&eval/1)
+    |> Enum.sum()
+  end
+
+  def parse(raw) do
+    raw
+    |> String.split("\n", trim: true)
+    |> Enum.map(&parse_expr/1)
+  end
+
   def parse_expr(raw) do
     raw
     |> String.graphemes()
