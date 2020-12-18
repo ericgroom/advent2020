@@ -29,22 +29,27 @@ defmodule Advent2020.Days.Day18 do
     |> Enum.filter(fn x -> not is_nil(x) end)
   end
 
+  def build_ast(x) when is_integer(x), do: x
+  def build_ast(x) when is_tuple(x), do: x
   def build_ast([x]) when is_tuple(x), do: x
   def build_ast(tokens) do
     # take two "operands", build a tree, nest that tree in the next expression
     {first_operand, rest} = take_operand(tokens)
+    first_operand = build_ast(first_operand)
     {op, rest} = take_operator(rest)
     {second_operand, rest} = take_operand(rest)
+    second_operand = build_ast(second_operand)
     expr = {op, first_operand, second_operand}
     build_ast([expr | rest])
   end
 
+  defp take_operand([x | rest]) when is_tuple(x), do: {x, rest}
   defp take_operand([x | rest]) when is_integer(x), do: {x, rest}
   defp take_operand([x | rest]) when x == :open do
     {in_parens, rest} = take_parens([x | rest])
-    {build_ast(in_parens), rest}
+    {in_parens, rest}
   end
-  defp take_operand([x | rest]) when is_tuple(x), do: {x, rest}
+ 
   defp take_operator([:+ | rest]), do: {:+, rest}
   defp take_operator([:* | rest]), do: {:*, rest}
 
