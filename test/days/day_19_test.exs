@@ -39,4 +39,29 @@ defmodule Advent2020.Days.Day19Test do
       ]
     end
   end
+
+  describe "resolve_rule/3" do
+    test "sample" do
+      {rules, _messages} = parse(@sample)
+      rules = Enum.into(rules, %{})
+      assert resolve_rule(5, rules) == ["b"]
+      assert resolve_rule(4, rules) == ["a"]
+      assert resolve_rule(3, rules) == ["ab", "ba"]
+      assert resolve_rule(2, rules) == ["aa", "bb"]
+      assert resolve_rule(1, rules) == ["aaab", "aaba", "bbab", "bbba", "abaa", "abbb", "baaa", "babb"]
+      assert resolve_rule(0, rules) == ["aaaabb", "aaabab", "abbabb", "abbbab", "aabaab", "aabbbb", "abaaab", "ababbb"]
+    end
+  end
+
+  describe "find_matches/3" do
+    test "sample" do
+      {rules, messages} = parse(@sample)
+      rules = Enum.into(rules, %{})
+      assert find_matches(messages, rules, 0) == ["ababbb", "abbbab"]
+    end
+
+    test "real input" do
+      assert part_one() == 220
+    end
+  end
 end
