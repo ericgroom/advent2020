@@ -3,14 +3,12 @@ defmodule Advent2020.Days.Day19 do
 
   def part_one do
     {rules, messages} = parse(@input)
-    rules = Enum.into(rules, %{})
     find_matches(messages, rules, 0)
     |> Enum.count()
   end
 
   def part_two do
     {rules, messages} = parse(@input)
-    rules = rules |> Enum.into(%{})
     find_matches_pt2(messages, rules)
     |> Enum.count()
   end
@@ -80,7 +78,7 @@ defmodule Advent2020.Days.Day19 do
 
     rules = rules
       |> String.split("\n", trim: true)
-      |> Enum.map(&parse_rule/1)
+      |> Enum.into(%{}, &parse_rule/1)
 
     messages = String.split(messages, "\n", trim: true)
 
