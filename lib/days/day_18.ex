@@ -15,33 +15,6 @@ defmodule Advent2020.Days.Day18 do
     |> Enum.map(&build_add_ast/1)
     |> Enum.map(&eval/1)
     |> Enum.sum()
-    # we just need a different ast builder
-    # when we come across a +, continue as normal
-    # when we come across a *, don't?
-    #
-    # in part one
-    # 1 + 2 * 3 + 4 * 5 + 6
-    # became
-  end
-
-  def parse(raw) do
-    raw
-    |> String.split("\n", trim: true)
-    |> Enum.map(&parse_expr/1)
-  end
-
-  def parse_expr(raw) do
-    raw
-    |> String.graphemes()
-    |> Stream.map(fn
-      " " -> nil
-      "+" -> :+
-      "*" -> :*
-      "(" -> :open
-      ")" -> :close
-      x -> int!(x) # input only seems to be single digits, probably for easier parsing
-    end)
-    |> Enum.filter(fn x -> not is_nil(x) end)
   end
 
   def build_add_ast(x) when is_integer(x), do: x
@@ -111,6 +84,26 @@ defmodule Advent2020.Days.Day18 do
   def eval(x) when is_integer(x), do: x
   def eval({:+, x, y}), do: eval(x) + eval(y)
   def eval({:*, x, y}), do: eval(x) * eval(y)
+
+  def parse(raw) do
+    raw
+    |> String.split("\n", trim: true)
+    |> Enum.map(&parse_expr/1)
+  end
+
+  def parse_expr(raw) do
+    raw
+    |> String.graphemes()
+    |> Stream.map(fn
+      " " -> nil
+      "+" -> :+
+      "*" -> :*
+      "(" -> :open
+      ")" -> :close
+      x -> int!(x) # input only seems to be single digits, probably for easier parsing
+    end)
+    |> Enum.filter(fn x -> not is_nil(x) end)
+  end
 
   defp int!(x) do
     {x, ""} = Integer.parse(x)
