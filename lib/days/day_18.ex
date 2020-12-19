@@ -18,9 +18,7 @@ defmodule Advent2020.Days.Day18 do
   end
 
   def build_add_ast(x) when is_integer(x), do: x
-  def build_add_ast([x]) when is_integer(x), do: x
   def build_add_ast(x) when is_tuple(x), do: x
-  def build_add_ast([x]) when is_tuple(x), do: x
   def build_add_ast(tokens) do
     {first_operand, rest} = take_operand(tokens)
     first_operand = build_add_ast(first_operand)
