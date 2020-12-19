@@ -20,8 +20,8 @@ defmodule Advent2020.Days.Day19 do
     # 8 essentially means 42 as many times as you want
     # 11 essentially means nest 42 31 into itself as many as you want
     # NOTHING USES 8 and 11 but 0
-    # iterate in reverse until 31 no longer matches
-    # make sure the rest are 42 and that there are as least as many as 31
+    # iterate until 42 no longer matches
+    # make sure the rest are 31 and that there are as least as many 42s as 31s
     forty_two_patterns = resolve_rule(42, rules) |> MapSet.new()
     thirty_one_patterns = resolve_rule(31, rules) |> MapSet.new()
     chunk_size = thirty_one_patterns |> Enum.take(1) |> List.first() |> String.length()
@@ -34,12 +34,13 @@ defmodule Advent2020.Days.Day19 do
         |> Enum.map(fn letters ->
           Enum.join(letters)
         end)
-        |> Enum.reverse()
-      {thirty_one_matches, rest} = chunks
+
+      {forty_two_matches, rest} = chunks
+        |> Enum.split_while(&MapSet.member?(forty_two_patterns, &1))
+
+      {thirty_one_matches, rest} = rest
         |> Enum.split_while(&MapSet.member?(thirty_one_patterns, &1))
 
-      {forty_two_matches, rest} = rest
-        |> Enum.split_while(&MapSet.member?(forty_two_patterns, &1))
       forty_two_matches_count = Enum.count(forty_two_matches)
       thirty_one_matches_count = Enum.count(thirty_one_matches)
       ratio_is_good = (forty_two_matches_count - 1) >= thirty_one_matches_count # asserts that there is at least one more 42 than there is 31
