@@ -4,8 +4,12 @@ defmodule Advent2020.Days.Day18Test do
   import Advent2020.Days.Day18
 
   describe "summed output" do
-    test "real input" do
+    test "real input part one" do
       assert part_one() == 8298263963837
+    end
+
+    test "real input part two" do
+      assert part_two() == 145575710203332
     end
   end
 
@@ -81,38 +85,38 @@ defmodule Advent2020.Days.Day18Test do
     end
 
     test "eval samples" do
-      assert "1 + (2 * 3) + (4 * (5 + 6))"
-        |> parse_expr()
-        |> build_add_ast()
-        |> eval()
-        == 51
-
-      # expected {:*, 2, {:+, 3, {:*, 4, 5}}}
-      # actual   {:*, 2, {:*, {:+, 3, 4}, 5}}
-      assert "2 * 3 + (4 * 5)"
-        |> parse_expr()
-        |> build_add_ast()
-        |> IO.inspect()
-        |> eval()
-        == 46
-
-      assert "5 + (8 * 3 + 9 + 3 * 4 * 3)"
-        |> parse_expr()
-        |> build_add_ast()
-        |> eval()
-        == 1445
-
-      assert "5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))"
-        |> parse_expr()
-        |> build_add_ast()
-        |> eval()
-        == 669060
-
-      # assert "((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2"
+      # assert "1 + (2 * 3) + (4 * (5 + 6))"
       #   |> parse_expr()
       #   |> build_add_ast()
       #   |> eval()
-      #   == 23340
+      #   == 51
+
+      # # expected {:*, 2, {:+, 3, {:*, 4, 5}}}
+      # # actual   {:*, 2, {:*, {:+, 3, 4}, 5}}
+      # assert "2 * 3 + (4 * 5)"
+      #   |> parse_expr()
+      #   |> build_add_ast()
+      #   |> IO.inspect()
+      #   |> eval()
+      #   == 46
+
+      # assert "5 + (8 * 3 + 9 + 3 * 4 * 3)"
+      #   |> parse_expr()
+      #   |> build_add_ast()
+      #   |> eval()
+      #   == 1445
+
+      # assert "5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))"
+      #   |> parse_expr()
+      #   |> build_add_ast()
+      #   |> eval()
+      #   == 669060
+
+      assert "((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2"
+        |> parse_expr()
+        |> build_add_ast()
+        |> eval()
+        == 23340
     end
   end
 

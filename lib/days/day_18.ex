@@ -54,19 +54,64 @@ defmodule Advent2020.Days.Day18 do
     IO.puts "first ub #{inspect first_operand}, rest #{inspect rest}"
     first_operand = build_add_ast(first_operand)
     IO.puts "first #{inspect first_operand}, rest #{inspect rest}"
-    {op, rest} = take_operator(rest)
-    IO.puts "op #{inspect op}, rest #{inspect rest}"
-    {second_operand, rest} = case op do
-      :+ -> take_operand(rest)
-      :* -> take_operand_until_mult(rest)
+    if rest == [] do
+      first_operand
+    else
+      {op, rest} = take_operator(rest)
+      IO.puts "op #{inspect op}, rest #{inspect rest}"
+      {second_operand, rest} = case op do
+        :+ -> take_operand(rest)
+        :* -> take_operand_until_mult(rest)
+      end
+      IO.puts "second ub #{inspect second_operand}, rest #{inspect rest}"
+      second_operand = build_add_ast(second_operand)
+      IO.puts "second #{inspect second_operand}, rest #{inspect rest}"
+      expr = {op, first_operand, second_operand}
+      IO.puts "expr #{inspect expr}, rest #{inspect rest}"
+      build_add_ast([expr | rest])
     end
-    IO.puts "second ub #{inspect second_operand}, rest #{inspect rest}"
-    second_operand = build_add_ast(second_operand)
-    IO.puts "second #{inspect second_operand}, rest #{inspect rest}"
-    expr = {op, first_operand, second_operand}
-    IO.puts "expr #{inspect expr}, rest #{inspect rest}"
-    build_add_ast([expr | rest])
   end
+
+  # [1, :+, 2, :*, 3, :+, 4, :*, 5, :+, 6]
+  # first_operand = 1
+  # op = :+
+  # second_operand = 2
+  # expr = {:+, 1, 2}
+  #
+  # first_operand = {:+, 1, 2}
+  # op = :*
+  # second_operand = {:+, 3, 4}
+  #
+  # expr = {:*, {:+, 1, 2}, {:+, 3, 4}}
+  #
+  # first_operand = {:*, {:+, 1, 2}, {:+, 3, 4}}
+  # op = :*
+  # second_operand = {:+, 5, 6}
+  #
+  # expr = {:*, {:*, {:+, 1, 2}, {:+, 3, 4}}}
+  #
+
+  # [1, :+, :open, 2, :*, 3, :close, :+, :open, 4, :*, :open, 5, :+, 6, :close, :close]
+  # first_operand = 1
+  # op = :+
+  # second_operand = [2, :*, 3]
+  # second_operand = {:*, 2, 3}
+  # expr = {:+, 1, {:*, 2, 3}}
+  #
+  # first = {:+, 1, {:*, 2, 3}}
+  # op = :+
+  # second_operand = [4, :*, :open, 5, :+, 6, :close]
+  # second_operand = {:*, 4, {:+, 5, 6}}
+  #
+  # expr = {:+, {:+, 1, {:*, 3, 3}}, {:*, 4, {:+, 5, 6}}}
+
+  # [2, :*, 3, :+, :open, 4, :*, 5, :close]
+  # first_operand = 2
+  # op = :*
+  # second_operand = [3, :+, :open, 4, :*, 5, :close]
+  # second_operand = {:+, 3, {:*, 4, 5}}
+  # expr = {:*, 2, {:+, 3, {:*, 4, 5}}}
+
   def build_ast(x) when is_integer(x), do: x
   def build_ast(x) when is_tuple(x), do: x
   def build_ast([x]) when is_tuple(x), do: x
@@ -82,15 +127,12 @@ defmodule Advent2020.Days.Day18 do
   end
 
   defp take_operand_until_mult(tokens, so_far \\ [])
+  defp take_operand_until_mult([], so_far), do: {so_far, []}
   defp take_operand_until_mult([x], so_far), do: {so_far ++ [x], []}
   defp take_operand_until_mult([x | rest], so_far) when x == :open do
     {inter_parens_tokens, rest} = take_parens([x | rest])
-    if Enum.count(so_far) == 0 do
-      {inter_parens_tokens, rest}
-    else
-      with_parens_tokens = [:open | inter_parens_tokens] ++ [:close]
-      {so_far ++ with_parens_tokens, rest}
-    end
+    with_parens_tokens = [:open | inter_parens_tokens] ++ [:close]
+    take_operand_until_mult(rest, so_far ++ with_parens_tokens)
   end
   defp take_operand_until_mult([x | rest], so_far) when x == :*, do: {so_far, [x | rest]}
   defp take_operand_until_mult([x | rest], so_far), do: take_operand_until_mult(rest, so_far ++ [x])
@@ -104,6 +146,7 @@ defmodule Advent2020.Days.Day18 do
  
   defp take_operator([:+ | rest]), do: {:+, rest}
   defp take_operator([:* | rest]), do: {:*, rest}
+  defp take_operator([x | rest]), do: {x, rest}
 
   defp take_parens(tokens, so_far \\ [], counter \\ 0)
   defp take_parens([:close | rest], so_far, 1), do: {so_far, rest}
