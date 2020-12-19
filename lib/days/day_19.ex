@@ -34,27 +34,6 @@ defmodule Advent2020.Days.Day19 do
   defp concat_product([as, bs, cs]) do
     for a <- as, b <- bs, c <- cs, do: a <> b <> c
   end
-      # join all possibilities within a branch
-      # 0: 4 1 5
-      # 1: 2 3 | 3 2
-      # 2: 4 4 | 5 5
-      # 3: 4 5 | 5 4
-      # 4: "a"
-      # 5: "b"
-
-      # 1: two and three has multiple possible subrules, we have to combine cartesian product I think
-      # 3: 4 resolves to ["a"] 5 resolves to ["b"]
-      # 3: has 2 branches
-      # 3: 4 5 means the below map will result in [["a"], ["b"]], to get the correct answer we just join them
-      # 3: 5 4 means the below map will result in [["b"], ["a"]], "
-      # 3: join the two branches and we get ["ab", "ba"]
-      # 2: resolves to ["aa", "bb"]
-      # 1: first branch we get [["aa", "bb"], ["ab", "ba"]]
-      # 1: second branch we get [["ab", "ba"], ["aa", "bb"]]
-      # 1: to combine the first branch, we do "aa" <> "ab", "aa" <> "ba", "bb" <> "ab", "bb" <> "ba" ["aaab", "aaba", "bbab", "bbba"]
-      # 1: to combine the second branch, we do "ab" <> "aa", "ab" <> "bb", "ba" <> "aa", "ba" <> "bb" ["abaa", "abbb", "baaa", "babb"]
-      # 1: to combine the branches, just join the lists into one list
-      # to combine within a branch, do cartesian product
 
   def parse(raw) do
     [rules, messages] = String.split(raw, "\n\n", trim: true)
