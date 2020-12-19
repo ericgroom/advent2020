@@ -59,6 +59,63 @@ defmodule Advent2020.Days.Day18Test do
     end
   end
 
+  describe "build_add_ast/1" do
+    test "sanity check" do
+      tokens = [1, :+, 2, :*, 3, :+, 4, :*, 5, :+, 6]
+      first = {:+, 1, 2}
+      second = {:+, 3, 4}
+      third = {:+, 5, 6}
+      fourth = {:*, first, second}
+      fifth = {:*, fourth, third}
+      assert build_add_ast(tokens) == fifth
+    end
+
+    test "parens sanity check" do
+      tokens = [1, :+, :open, 2, :*, 3, :close, :+, :open, 4, :*, :open, 5, :+, 6, :close, :close]
+      first = {:+, 5, 6}
+      second = {:*, 4, first}
+      third = {:*, 2, 3}
+      fourth = {:+, 1, third}
+      expected_ast = {:+, fourth, second}
+      assert build_add_ast(tokens) == expected_ast
+    end
+
+    test "eval samples" do
+      assert "1 + (2 * 3) + (4 * (5 + 6))"
+        |> parse_expr()
+        |> build_add_ast()
+        |> eval()
+        == 51
+
+      # expected {:*, 2, {:+, 3, {:*, 4, 5}}}
+      # actual   {:*, 2, {:*, {:+, 3, 4}, 5}}
+      assert "2 * 3 + (4 * 5)"
+        |> parse_expr()
+        |> build_add_ast()
+        |> IO.inspect()
+        |> eval()
+        == 46
+
+      assert "5 + (8 * 3 + 9 + 3 * 4 * 3)"
+        |> parse_expr()
+        |> build_add_ast()
+        |> eval()
+        == 1445
+
+      assert "5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))"
+        |> parse_expr()
+        |> build_add_ast()
+        |> eval()
+        == 669060
+
+      # assert "((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2"
+      #   |> parse_expr()
+      #   |> build_add_ast()
+      #   |> eval()
+      #   == 23340
+    end
+  end
+
   describe "parse_expr/1" do
     test "sanity check" do
       raw = "1 + (2 * 3) + (4 * (5 + 6))"

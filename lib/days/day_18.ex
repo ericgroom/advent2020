@@ -9,6 +9,21 @@ defmodule Advent2020.Days.Day18 do
     |> Enum.sum()
   end
 
+  def part_two do
+    @input
+    |> parse()
+    |> Enum.map(&build_add_ast/1)
+    |> Enum.map(&eval/1)
+    |> Enum.sum()
+    # we just need a different ast builder
+    # when we come across a +, continue as normal
+    # when we come across a *, don't?
+    #
+    # in part one
+    # 1 + 2 * 3 + 4 * 5 + 6
+    # became
+  end
+
   def parse(raw) do
     raw
     |> String.split("\n", trim: true)
@@ -29,6 +44,29 @@ defmodule Advent2020.Days.Day18 do
     |> Enum.filter(fn x -> not is_nil(x) end)
   end
 
+  def build_add_ast(x) when is_integer(x), do: x
+  def build_add_ast([x]) when is_integer(x), do: x
+  def build_add_ast(x) when is_tuple(x), do: x
+  def build_add_ast([x]) when is_tuple(x), do: x
+  def build_add_ast(tokens) do
+    IO.puts "making ast for #{inspect tokens}"
+    {first_operand, rest} = take_operand(tokens)
+    IO.puts "first ub #{inspect first_operand}, rest #{inspect rest}"
+    first_operand = build_add_ast(first_operand)
+    IO.puts "first #{inspect first_operand}, rest #{inspect rest}"
+    {op, rest} = take_operator(rest)
+    IO.puts "op #{inspect op}, rest #{inspect rest}"
+    {second_operand, rest} = case op do
+      :+ -> take_operand(rest)
+      :* -> take_operand_until_mult(rest)
+    end
+    IO.puts "second ub #{inspect second_operand}, rest #{inspect rest}"
+    second_operand = build_add_ast(second_operand)
+    IO.puts "second #{inspect second_operand}, rest #{inspect rest}"
+    expr = {op, first_operand, second_operand}
+    IO.puts "expr #{inspect expr}, rest #{inspect rest}"
+    build_add_ast([expr | rest])
+  end
   def build_ast(x) when is_integer(x), do: x
   def build_ast(x) when is_tuple(x), do: x
   def build_ast([x]) when is_tuple(x), do: x
@@ -42,6 +80,20 @@ defmodule Advent2020.Days.Day18 do
     expr = {op, first_operand, second_operand}
     build_ast([expr | rest])
   end
+
+  defp take_operand_until_mult(tokens, so_far \\ [])
+  defp take_operand_until_mult([x], so_far), do: {so_far ++ [x], []}
+  defp take_operand_until_mult([x | rest], so_far) when x == :open do
+    {inter_parens_tokens, rest} = take_parens([x | rest])
+    if Enum.count(so_far) == 0 do
+      {inter_parens_tokens, rest}
+    else
+      with_parens_tokens = [:open | inter_parens_tokens] ++ [:close]
+      {so_far ++ with_parens_tokens, rest}
+    end
+  end
+  defp take_operand_until_mult([x | rest], so_far) when x == :*, do: {so_far, [x | rest]}
+  defp take_operand_until_mult([x | rest], so_far), do: take_operand_until_mult(rest, so_far ++ [x])
 
   defp take_operand([x | rest]) when is_tuple(x), do: {x, rest}
   defp take_operand([x | rest]) when is_integer(x), do: {x, rest}
