@@ -49,68 +49,21 @@ defmodule Advent2020.Days.Day18 do
   def build_add_ast(x) when is_tuple(x), do: x
   def build_add_ast([x]) when is_tuple(x), do: x
   def build_add_ast(tokens) do
-    IO.puts "making ast for #{inspect tokens}"
     {first_operand, rest} = take_operand(tokens)
-    IO.puts "first ub #{inspect first_operand}, rest #{inspect rest}"
     first_operand = build_add_ast(first_operand)
-    IO.puts "first #{inspect first_operand}, rest #{inspect rest}"
     if rest == [] do
       first_operand
     else
       {op, rest} = take_operator(rest)
-      IO.puts "op #{inspect op}, rest #{inspect rest}"
       {second_operand, rest} = case op do
         :+ -> take_operand(rest)
         :* -> take_operand_until_mult(rest)
       end
-      IO.puts "second ub #{inspect second_operand}, rest #{inspect rest}"
       second_operand = build_add_ast(second_operand)
-      IO.puts "second #{inspect second_operand}, rest #{inspect rest}"
       expr = {op, first_operand, second_operand}
-      IO.puts "expr #{inspect expr}, rest #{inspect rest}"
       build_add_ast([expr | rest])
     end
   end
-
-  # [1, :+, 2, :*, 3, :+, 4, :*, 5, :+, 6]
-  # first_operand = 1
-  # op = :+
-  # second_operand = 2
-  # expr = {:+, 1, 2}
-  #
-  # first_operand = {:+, 1, 2}
-  # op = :*
-  # second_operand = {:+, 3, 4}
-  #
-  # expr = {:*, {:+, 1, 2}, {:+, 3, 4}}
-  #
-  # first_operand = {:*, {:+, 1, 2}, {:+, 3, 4}}
-  # op = :*
-  # second_operand = {:+, 5, 6}
-  #
-  # expr = {:*, {:*, {:+, 1, 2}, {:+, 3, 4}}}
-  #
-
-  # [1, :+, :open, 2, :*, 3, :close, :+, :open, 4, :*, :open, 5, :+, 6, :close, :close]
-  # first_operand = 1
-  # op = :+
-  # second_operand = [2, :*, 3]
-  # second_operand = {:*, 2, 3}
-  # expr = {:+, 1, {:*, 2, 3}}
-  #
-  # first = {:+, 1, {:*, 2, 3}}
-  # op = :+
-  # second_operand = [4, :*, :open, 5, :+, 6, :close]
-  # second_operand = {:*, 4, {:+, 5, 6}}
-  #
-  # expr = {:+, {:+, 1, {:*, 3, 3}}, {:*, 4, {:+, 5, 6}}}
-
-  # [2, :*, 3, :+, :open, 4, :*, 5, :close]
-  # first_operand = 2
-  # op = :*
-  # second_operand = [3, :+, :open, 4, :*, 5, :close]
-  # second_operand = {:+, 3, {:*, 4, 5}}
-  # expr = {:*, 2, {:+, 3, {:*, 4, 5}}}
 
   def build_ast(x) when is_integer(x), do: x
   def build_ast(x) when is_tuple(x), do: x

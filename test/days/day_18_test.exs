@@ -94,7 +94,6 @@ defmodule Advent2020.Days.Day18Test do
       assert "2 * 3 + (4 * 5)"
         |> parse_expr()
         |> build_add_ast()
-        |> IO.inspect()
         |> eval()
         == 46
 
