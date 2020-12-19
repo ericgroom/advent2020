@@ -28,21 +28,23 @@ defmodule Advent2020.Days.Day19 do
 
     messages
     |> Enum.filter(fn message ->
-      {thirty_one_matches, rest} = message
+      chunks = message
         |> String.graphemes()
         |> Enum.chunk_every(chunk_size)
         |> Enum.map(fn letters ->
           Enum.join(letters)
         end)
         |> Enum.reverse()
-        |> Enum.split_while(fn chunk -> MapSet.member?(thirty_one_patterns, chunk) end)
+      {thirty_one_matches, rest} = chunks
+        |> Enum.split_while(&MapSet.member?(thirty_one_patterns, &1))
 
-      forty_two_matches_count = Enum.count(rest, fn chunk -> MapSet.member?(forty_two_patterns, chunk) end)
+      {forty_two_matches, rest} = rest
+        |> Enum.split_while(&MapSet.member?(forty_two_patterns, &1))
+      forty_two_matches_count = Enum.count(forty_two_matches)
       thirty_one_matches_count = Enum.count(thirty_one_matches)
       ratio_is_good = (forty_two_matches_count - 1) >= thirty_one_matches_count # asserts that there is at least one more 42 than there is 31
-      matched_full_string = ((forty_two_matches_count * chunk_size) + (thirty_one_matches_count * chunk_size)) == String.length(message)
 
-      thirty_one_matches_count > 0 and ratio_is_good and matched_full_string
+      thirty_one_matches_count > 0 and ratio_is_good and rest == []
     end)
   end
 
