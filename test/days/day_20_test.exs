@@ -113,9 +113,14 @@ defmodule Advent2020.Days.Day20Test do
   ..#.###...
   """
 
-  describe "test_spacially_independent" do
-    test "pls" do
-      IO.inspect(parse(@sample) |> test_spacially_independent())
+  describe "find_corners/1" do
+    test "sample input" do
+      corners = find_corners(parse(@sample))
+      assert MapSet.new(corners) == MapSet.new([1951, 3079, 2971, 1171])
+    end
+
+    test "real input" do
+      assert part_one() == 27798062994017
     end
   end
 
