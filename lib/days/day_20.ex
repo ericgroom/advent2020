@@ -4,14 +4,14 @@ defmodule Advent2020.Days.Day20 do
   def part_one do
     @input
     |> parse()
+    |> create_edge_registry()
     |> find_corners()
     |> Enum.reduce(1, &*/2)
   end
 
-  def find_corners(images) do
-    images
-    |> Enum.map(fn {id, image} -> {id, edges(image)} end)
-    |> create_edge_registry()
+
+  def find_corners(registry) do
+    registry
     |> Map.values()
     |> Enum.filter(fn set -> MapSet.size(set) >= 2 end)
     |> Enum.flat_map(fn set -> MapSet.to_list(set) end)
@@ -22,10 +22,8 @@ defmodule Advent2020.Days.Day20 do
 
   def create_edge_registry(images, registry \\ %{})
   def create_edge_registry([], registry), do: registry
-  def create_edge_registry([image | rest] = _images, registry) do
-    {id, edges} = image
-
-    registry = edges
+  def create_edge_registry([{id, image} | rest] = _images, registry) do
+    registry = edges(image)
     |> Enum.reduce(registry, fn edge, registry -> register_edge(edge, id, registry) end)
 
     create_edge_registry(rest, registry)

@@ -115,7 +115,9 @@ defmodule Advent2020.Days.Day20Test do
 
   describe "find_corners/1" do
     test "sample input" do
-      corners = find_corners(parse(@sample))
+      input = parse(@sample)
+      registry = create_edge_registry(input)
+      corners = find_corners(registry)
       assert MapSet.new(corners) == MapSet.new([1951, 3079, 2971, 1171])
     end
 
