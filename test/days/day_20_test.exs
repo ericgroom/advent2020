@@ -113,6 +113,26 @@ defmodule Advent2020.Days.Day20Test do
   ..#.###...
   """
 
+  describe "test_spacially_independent" do
+    test "pls" do
+      IO.inspect(parse(@sample) |> test_spacially_independent())
+    end
+  end
+
+  describe "edges/1" do
+    test "can get edges of image" do
+      {_id, image} = parse(@sample) |> List.first()
+      edges = edges(image)
+
+      assert edges == [
+        [0, 0, 1, 1, 0, 1, 0, 0, 1, 0],
+        [0, 0, 0, 1, 0, 1, 1, 0, 0, 1],
+        [0, 0, 1, 1, 1, 0, 0, 1, 1, 1],
+        [0, 1, 1, 1, 1, 1, 0, 0, 1, 0]
+      ]
+    end
+  end
+
   describe "parse/1" do
     test "can parse sample input" do
       output = parse(@sample)
