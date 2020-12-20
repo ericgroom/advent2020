@@ -9,6 +9,95 @@ defmodule Advent2020.Days.Day20 do
     |> Enum.reduce(1, &*/2)
   end
 
+  def find_tile_arrangement(images) do
+    edge_registry = create_edge_registry(images)
+    images = Enum.into(images, %{})
+    corners = find_corners(edge_registry)
+    [corner | _rest] = corners
+
+    [top, right, bottom, left] = Map.get(images, corner) |> edges()
+    top_counterpart    = edge_counterpart(top, corner, edge_registry)
+    right_counterpart  = edge_counterpart(right, corner, edge_registry)
+    bottom_counterpart = edge_counterpart(bottom, corner, edge_registry)
+    left_counterpart   = edge_counterpart(left, corner, edge_registry)
+
+    top_image = if top_counterpart do
+      image = Map.get(images, top_counterpart)
+
+      [ctop, cright, cbottom, cleft] = edges(image)
+      transform = cond do
+        ctop == top -> {2, :horizontal}
+        Enum.reverse(ctop) == top -> {2, :none}
+        cright == top -> {1, :horizontal}
+        Enum.reverse(cright) == top -> {1, :none}
+        cbottom == top -> {0, :none}
+        Enum.reverse(bottom) == top -> {0, :horizontal}
+        cleft == top -> {3, :none}
+        Enum.reverse(cleft) == top -> {3, :horizontal}
+      end
+
+      {top_counterpart, apply_transform(image, transform)}
+    end
+
+    right_image = if right_counterpart do
+      image = Map.get(images, right_counterpart)
+
+      [ctop, cright, cbottom, cleft] = edges(image)
+      transform = cond do
+        ctop == right -> {3, :vertical}
+        Enum.reverse(ctop) == right -> {3, :none}
+        cright == right -> {2, :vertical}
+        Enum.reverse(cright) == right -> {2, :none}
+        cbottom == right -> {1, :none}
+        Enum.reverse(bottom) == right -> {1, :vertical}
+        cleft == right -> {0, :none}
+        Enum.reverse(cleft) == right -> {0, :vertical}
+      end
+
+      {right_counterpart, apply_transform(image, transform)}
+    end
+
+    IO.inspect right_image
+    IO.inspect Map.get(images, corner)
+  end
+
+  defp apply_transform(image, {rotations, reflection}) do
+    rotated = case rotations do
+                0 -> image
+                1 -> image |> rotate()
+                2 -> image |> rotate() |> rotate()
+                3 -> image |> rotate() |> rotate()
+    end
+
+    case reflection do
+      :none -> rotated
+      :horizontal -> raise "todo"
+      :vertical -> raise "todo"
+    end
+  end
+
+  defp transpose(image) do
+    image
+    |> List.zip()
+    |> Enum.map(&Tuple.to_list/1)
+  end
+
+  defp rotate(image) do
+    image
+    |> transpose()
+    |> Enum.map(&Enum.reverse/1)
+  end
+
+  def edge_counterpart(edge, id, registry) do
+    normal = Map.get(registry, edge, MapSet.new())
+    inverse = Map.get(registry, Enum.reverse(edge), MapSet.new())
+    counterparts = MapSet.union(normal, inverse)
+      |> MapSet.difference(MapSet.new([id]))
+
+    if MapSet.size(counterparts) > 1, do: raise "has more than 1 counterpart"
+
+    MapSet.to_list(counterparts) |> List.first()
+  end
 
   def find_corners(registry) do
     registry

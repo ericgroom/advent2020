@@ -113,6 +113,18 @@ defmodule Advent2020.Days.Day20Test do
   ..#.###...
   """
 
+  describe "find_tile_arrangement/1" do
+    test "sample input" do
+      input = parse(@sample)
+
+      assert find_tile_arrangement(input) == [
+        [1951, 2311, 3079],
+        [2729, 1427, 2473],
+        [2971, 1489, 1171],
+      ]
+    end
+  end
+
   describe "find_corners/1" do
     test "sample input" do
       input = parse(@sample)
